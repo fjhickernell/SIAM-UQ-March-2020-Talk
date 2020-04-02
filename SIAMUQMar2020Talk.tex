@@ -46,6 +46,7 @@
 \newcommand{\oton}{1\!:\!n}
 \newcommand{\talert}[1]{\alert{\text{#1}}}
 \DeclareMathOperator{\init}{init}
+\DeclareMathOperator{\GP}{\cg\cp}
 %\DeclareMathOperator{\app}{app}
 
 \providecommand{\HickernellFJ}{H.}
@@ -169,32 +170,45 @@ Adaptive software libraries \href{https://gailgithub.github.io/GAIL_Dev/}{\beame
 
 
 \begin{frame}{Problem}
+	\only<1-4>{\northeaststuff{1}{2.4}{\includegraphics[width=2cm]{ProgramsImages/GoldVase.jpg}}}
+	\only<5->{\northeaststuff{1}{2.4}{\includegraphics[width=2cm]{ProgramsImages/decorshore-fired-gold-vase-with-striped-crackled-glass-mosaic-vases.jpg}}}
+	\northeaststuff{1}{0.9}{\alert{$f$}}
 
-\vspace{-5ex}
-\begin{itemize}
-    \item Given \alert{black-box} function routine $f \colon \cx \subseteq \reals^d \to \reals$, e.g., output of a computer simulation
-    
-    \item \alert{Expensive} cost of a function value, $\$(f)$
-    
-    \item Want \alert{fixed tolerance algorithm} $\alg: \cc \times (0,\infty) \to L^{\infty}(\cx)$ such that 
+\vspace{-8ex}
+
+   Want \alert{fixed tolerance cubature} $\alg: L^1[0,1]^d \times (0,\infty) \to \reals$ such that 
+   
+   \vspace{-4ex}
     \[
-    \norm[\infty]{f - \alg(f,\varepsilon)} \le \varepsilon \qquad \forall f \in \cc \text{ \alert{candidate set}}
+    \only<2->{\Prob_f \Bigg [ }\biggabs{\int_{[0,1]^d} f(\vx) \, \dif \vx - \alg(f,\varepsilon)} \le \varepsilon \only<2->{\Bigg ] \ge 99\%} \qquad \forall \varepsilon > 0, \quad \only<1>{\talert{for reasonable $f$}}\only<2->{\alert{f \sim \GP(m,s^2C_{\vtheta})}}
     \]
-    \alert{cheap} cost of an $\alg(f,\varepsilon)$ value\only<1>{, e.g., spline}\uncover<2->{
-    \begin{gather*}
-        \text{\alert{design or node array} }\mX \in \cx^n \subseteq \reals^{n \times d}, \qquad \text{\alert{function data} }  \vy = f(\mX)\in \reals^n \\
-        \vx_{n+1} = \argmax_{\vx \in \cx} \ACQ(\vx,\mX,\vy) \text{ \alert{acquisition function}} \\
-        \norm[\infty]{f - \app(\mX,\vy)} \le \ERR(\mX,\vy) \text{ \alert{data-driven error bound}} \qquad \forall n \in \naturals, \quad f \in \cc \\
-        n^* = \min \, \{ n \in \naturals \colon \ERR(\mX,\vy) \le \varepsilon \} \text{ \alert{stopping criterion}} \\
-        \alg(f,\varepsilon) = \app(\mX,\vy) \text{ \alert{fixed budget approximation} for this } n^*
-    \end{gather*}}
- \end{itemize}
+    \vspace{-3ex}
+    \uncover<3->{\begin{gather*}
+        \text{\alert{design or node array} }\mX = (\vx_1, \ldots, \vx_n)^T \in [0,1]^{n \times d}, \qquad \text{\alert{function data} }  \vf = f(\mX)\in \reals^n \\
+    c = \int_{[0,1]^{d} \times [0,1]^{d}} C_{\vtheta}(\vt,\vx) \, \dif \vt \dif \vx > 0, \qquad 
+\vc = \int_{[0,1]^{2d}} C_{\vtheta}(\mX,\vt) \, \dif \vt \in [0,1]^{n} , \qquad
+\mC = C_{\vtheta}(\mX,\mX)  \in [0,1]^{n \times n} \\
+\int_{[0,1]^d} f(\vx) \, \dif \vx  \, \big \vert \, (\vf = \vy) \sim \cn\Bigl( m[ 1 - \vc^T \mC^{-1}\vone] + \vc \mC^{-1}\vy, s^2(c - \vc^T \mC^{-1}\vc)\Bigr)
+    \end{gather*}
+    
+    \vspace{-4ex}
+Choosing $n$  large enough to make $2.58s\sqrt{c - \vc^T \mC^{-1}\vc} \le \varepsilon$ would seem to achieve our goal
+
  
- \vspace{-6ex}
- \uncover<3->{\alert{Adaptive} sample size, design, and fixed budget approximation \\
- Assumes that \alert{what you see is almost what you get}}
+ \vspace{-1ex}
+ \uncover<4->{
+ 	\alert{Issues requiring attention}
+ 	
+ 	\vspace{-3ex}
+ \begin{itemize}
+ 	\item Ill-conditioning and numerical cost of vector-matrix calculations
+ 	\item Inference of $m$, $s$,  $\vtheta$, and $C_{\vtheta}$, which urn  $f$ comes from
+ 	\item Whether Gaussian process is a reasonable assumption
+\end{itemize}}}
     
 \end{frame}
+
+\end{document}
 
 
 \section{Univariate, Low Accuracy}
