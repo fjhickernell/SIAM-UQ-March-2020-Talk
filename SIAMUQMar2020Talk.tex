@@ -47,6 +47,10 @@
 \newcommand{\talert}[1]{\alert{\text{#1}}}
 \DeclareMathOperator{\init}{init}
 \DeclareMathOperator{\GP}{\cg\cp}
+\newcommand{\MLE}{\textup{EB}}
+\newcommand{\mCtheta}{{\mathsf{C}_{\vtheta}}}
+\newcommand{\mCInv}{\mathsf{C}^{-1}}
+
 %\DeclareMathOperator{\app}{app}
 
 \providecommand{\HickernellFJ}{H.}
@@ -185,10 +189,10 @@ Adaptive software libraries \href{https://gailgithub.github.io/GAIL_Dev/}{\beame
     \vspace{-3ex}
     \uncover<3->{\begin{gather*}
         \text{\alert{design or node array} }\mX = (\vx_1, \ldots, \vx_n)^T \in [0,1]^{n \times d}, \qquad \text{\alert{function data} }  \vf = f(\mX)\in \reals^n \\
-    c = \int_{[0,1]^{d} \times [0,1]^{d}} C_{\vtheta}(\vt,\vx) \, \dif \vt \dif \vx > 0, \qquad 
-\vc = \int_{[0,1]^{d}} C_{\vtheta}(\mX,\vt) \, \dif \vt \in [0,1]^{n} , \qquad
-\mC = C_{\vtheta}(\mX,\mX)  \in [0,1]^{n \times n} \\
-\int_{[0,1]^d} f(\vx) \, \dif \vx  \, \big \vert \, (\vf = \vy) \sim \cn\Bigl( m[ 1 - \vc^T \mC^{-1}\vone] + \vc \mC^{-1}\vy, s^2(c - \vc^T \mC^{-1}\vc)\Bigr)
+    c_{0\vtheta} = \int_{[0,1]^{d} \times [0,1]^{d}} C_{\vtheta}(\vt,\vx) \, \dif \vt \dif \vx > 0, \quad 
+\vc_\vtheta = \int_{[0,1]^{d}} C_{\vtheta}(\mX,\vt) \, \dif \vt \in [0,1]^{n} , \quad
+\mC_\vtheta = C_{\vtheta}(\mX,\mX)  \in [0,1]^{n \times n} \\
+\int_{[0,1]^d} f(\vx) \, \dif \vx  \, \big \vert \, (\vf = \vy) \sim \cn\Bigl(\underbrace{ m[ 1 - \vc_\vtheta^T \mC_\vtheta^{-1}\vone] + \vc_\vtheta^T \mC^{-1}\vy}_{\alg(f,\varepsilon)}, s^2(c_\vtheta - \vc_\vtheta^T \mC_\vtheta^{-1}\vc_\vtheta)\Bigr)
     \end{gather*}
     
     \vspace{-4ex}
@@ -201,282 +205,86 @@ Choosing $n$  large enough to make $2.58s\sqrt{c - \vc^T \mC^{-1}\vc} \le \varep
  	
  	\vspace{-3ex}
  \begin{itemize}
- 	\item Ill-conditioning and numerical cost of vector-matrix calculations
  	\item Inference of $m$, $s$,  $\vtheta$, and $C_{\vtheta}$, which urn  $f$ comes from
+ 	\item Ill-conditioning and numerical cost of vector-matrix calculations
  	\item Whether Gaussian process is a reasonable assumption
 \end{itemize}}}
     
 \end{frame}
 
-\begin{frame}{Infering Gaussian Process Parameters for $\GP(m,s^2C_{\vtheta})$\footfullcite{RatHic19a}}
+\begin{frame}{Inferring Gaussian Process Parameters for $\GP(m,s^2C_{\vtheta})$\footfullcite{RatHic19a}}
+\only<1->{\northeaststuff{1}{2.4}{\includegraphics[width=2cm]{ProgramsImages/GoldVase.jpg}}}
+\only<2->{\northeaststuff{1}{2.4}{\includegraphics[width=2cm]{ProgramsImages/decorshore-fired-gold-vase-with-striped-crackled-glass-mosaic-vases.jpg}}}
+\northeaststuff{1}{0.9}{\alert{$f$}}
+
+\vspace{-10ex}
+
+	Using \alert{empirical Bayes}
+	\begin{align*} 
+m_{\MLE} &= \frac{\vone^T \mCInv_\vtheta \vy }{ \vone^T \mCInv_\vtheta \vone}, \qquad
+s^2_{\MLE} = 
+\frac{1}{n}
+\vy^T 
+\left[ \mCInv_\vtheta - 
+\frac{ \mCInv_\vtheta \vone \vone^T \mCInv_\vtheta }{\vone^T\mCInv_\vtheta \vone}
+\right] \vy, \\
+\vtheta_{\MLE}
+&= \argmin_{\vtheta} \biggl \{
+\log\left(\vy^T 
+\left[ \mC_\vtheta^{-1} - 
+\frac{ \mCInv_\vtheta \vone \vone^T \mCInv_\vtheta }{\vone^T\mCInv_\vtheta \vone}
+\right] \vy 
+\right)  
++  \frac{1}{n} \log(\det(\mC_\vtheta))
+\biggr \}, \\
+\alg(f,\varepsilon) &= 
+\left(
+\frac{ (1 - \vone^T  \mCInv_\vtheta\vc_{\vtheta} )  \vone }{ \vone^T \mCInv_\vtheta \vone}   +  \vc_{\vtheta} 
+\right)^T  \mCInv_\vtheta \vy \qquad \text{when }
+2.58 s_{\mathsf{\MLE}} \sqrt{c_{0\vtheta} - \vc_{\vtheta}^T\mC_\vtheta^{-1}\vc_{\vtheta} } \le \varepsilon
+	\end{align*}
+	
+	\vspace{-4ex}
+	
+\uncover<2->{\begin{itemize}
+		\item Ill-conditioning and numerical cost of vector-matrix calculations
+		\item Whether Gaussian process is a reasonable assumption
+\end{itemize}}
+
+\end{frame}
+
+\section{Fast Transforms}
+{Fast Transforms in General}
+If the kernel $C_\vtheta$ and the design $\mX$ match such that
+\begin{align}
+\mC = \mC_\vtheta &= \frac 1n \mV \mLambda \mV^H , 
+\quad \quad \mV^H = n \mV^{-1}, \\
+\nonumber
+\mV &= (\vv_1,\ldots,\vv_n)^T = (\vV_1,\ldots,\vV_n),
+\qquad
+\mC^p  = \frac 1n \mV \mLambda^{p} \mV^H, \qquad \forall p \in \integers.
+\end{align}
+In this and later sections, we drop the $\vtheta$ dependence of various quantities for simplicity of notation.  Here, $\mV^H$ is the Hermitian of $\mV$, $\vC_1,\dots,\vC_n$ are columns of $\mC$,  $\vV_1,\dots,\vV_n$ are columns of $\mV$, and $\vv_1,\dots,\vv_n$ are rows of $\mV$.  The normalization of $\mV$ assumed in \eqref{eqn:ftk_factor} conveniently allows the first eigenvector, $\vV_1$, to be the vector of ones in \eqref{fastcompAssumpB} below.  The columns of $\mV$ are eigenvectors of $\mC$, and $\mLambda$ is a diagonal matrix of eigenvalues of $\mC$.
+For any $n \times 1$ vector $\vb$, define the notation  $\widetilde{\vb} := \mV^H \vb$.
+
+We make three assumptions that facilitate  fast computation:
+\begin{subequations} \label{fastcompAssump}
+	\begin{gather}
+	\label{fastcompAssumpA}
+	\mV \text{ may be identified analytically}, \\
+	\label{fastcompAssumpB}
+	\vv_1 = \vV_1 = \vone, \\
+	\label{fastcompAssumpC}
+	\mV^H \vb  \text{ requires only $\Order(n \log(n))$ operations } \forall \vb.
+	\end{gather}
+\end{subequations}
+We call the transformation $\vb \mapsto \mV^H \vb$ a \emph{fast Bayesian transform} and $C_\vtheta$ a \emph{fast Bayesian transform kernel}.  
+
+\section{Gaussian Process Diagnostics}
+
+\begin{frame}{title}
 	content...
 \end{frame}
-
-\end{document}
-
-
-\section{Univariate, Low Accuracy}
-
-\begin{frame}{Linear Splines}
-\northeaststuff{3.7}{2.2}{\includegraphics[width=6cm]{ProgramsImages/LinearSpline.eps}}
-
-\vspace{-8ex}
-
-\begin{minipage}{0.5\textwidth}
-\vspace{-2ex}
-    \begin{gather*}
-    f  :[a,b] \to \reals \\
-    a =: x_0 < x_1 < \cdots < x_n :=b, \quad \mX = \bigl( x_i \bigr)_{i=0}^n \talert{ data sites}\\ 
-   \talert{function data } \vy = f(\mX)
-\end{gather*}
-\end{minipage}
-
-\begin{gather*}
-    \alert{\text{linear spline }}\app(\mX,\vy)  := \frac{x -x_i}{x_{i-1} - x_i} y_{i-1} +  \frac{x -x_{i-1}}{x_i - x_{i-1}} y_{i}, \quad x_{i-1} \le x \le x_i, \quad i \in \oton \\
-    \norm[{\infty,[x_{i-1}, x_i]}]{f - \app(\mX,\vy)}  \le 
-    \frac{(x_i - x_{i-1})^2\norm[{\infty,[x_{i-1},x_i]}]{f''}}{8}, \qquad i \in \oton, \quad  f \in \cw^{2,\infty}
-\end{gather*}
-\only<1-2>{\uncover<2>{Numerical analysis often stops here, leaving \alert{unanswered}  questions:
-
-\vspace{-2ex}
-\begin{itemize}
-    \item How big should $n$ be to make $\norm[{\infty}]{f - \app(\mX,\vy)} \le \varepsilon$?
-    \item How big is $\norm[{\infty,[x_{i-1},x_i]}]{f''}$?
-    \item How best to choose $\mX$?
-\end{itemize}
-}}
-    
-\end{frame}
-
-
-\begin{frame}{Linear Splines Error}
-	\northeaststuff{3.7}{2.2}{\includegraphics[width=6cm]{ProgramsImages/LinearSplineSecDeriv.eps}}
-	
-	\vspace{-8ex}
-	
-	\begin{minipage}{0.5\textwidth}
-		\vspace{-2ex}
-		\begin{gather*}
-		f  :[a,b] \to \reals \\
-		a =: x_0 < x_1 < \cdots < x_n :=b, \quad \mX = \bigl( x_i \bigr)_{i=0}^n \talert{ data sites}\\ 
-		\talert{function data } \vy = f(\mX)
-		\end{gather*}
-	\end{minipage}
-	
-	\begin{gather*}
-	\only<1-2>{\alert{\text{linear spline }}\app(\mX,\vy)  := \frac{x -x_i}{x_{i-1} - x_i} y_{i-1} +  \frac{x -x_{i-1}}{x_i - x_{i-1}} y_{i}, \quad x_{i-1} \le x \le x_i, \quad i \in \oton \\}
-	\norm[{\infty,[x_{i-1}, x_i]}]{f - \app(\mX,\vy)}  \le 
-	\frac{1}{8}(x_i - x_{i-1})^2\norm[{\infty,[x_{i-1},x_i]}]{f''}\only<1-2>{,}\only<3->{\le \max_{\pm} \ERR_{i,\pm}(\mX,\vy),} \quad i \in \oton, \;  f \in \only<1-2>{\cw^{2,\infty}}\only<3->{\cc}
-   \only<1-2>{\\ \norm[{-\infty, [x_{i-1},x_{i+1}]}]{f''}
-	\le \underbrace{\Biggl \lvert \frac{\frac{y_{i+1} - y_i}{x_{i+1} - x_i} - \frac{y_i - y_{i-1}}{x_i - x_{i-1}}}{(x_{i+1} - x_{i-1})/2}\Biggr \rvert}_{\substack{D_i(\mX,\vy) = 2\abs{f[x_{i-1},x_i,x_{i+1}]} \talert{ data based}\\ \talert{abs.\ $2^{\text{nd}}$ deriv.\ of interp.\ poly.}}}
-	\le \norm[{\infty, [x_{i-1},x_{i+1}]}]{f''}}
-	\end{gather*}
-	\vspace{-3ex}
-	\uncover<2->{\begin{multline*}
-	\talert{candidate set }	\cc : =  \Bigl \{ f \in \cw^{2,\infty}  : \abs{f''(x)} \le \max \bigl (\fC(h_{-}) \abs{f''(x - h_-)},  \fC(h_{+})\abs{f''(x + h_+)} \bigr), \ 
-	0 < h_{\pm} < \fh, \\[-1ex]
-	a < x < b \Bigr\} \qquad
-	\talert{inflation factor } \fC(h) := \frac{\fC_0 \fh}{\fh - h} \qquad \talert{$\abs{f''}$ does not change abruptly}
-	\end{multline*}}
-
-\only<3->{\vspace{-8ex} 
-	\begin{gather*}
-\ERR_{i,-}(\mX,\vy) =  \frac18 (x_i-x_{i-1})^2\fC(x_i - x_{i-3}) D_{i-2}(\mX,\vy), \\
-\ERR_{i,+}(\mX,\vy) = \frac 18 (x_i-x_{i-1})^2\fC(x_{i+2} - x_{i-1}) D_{i+1}(\mX,\vy)\\
-D_i(\mX,\vy) = 2\abs{f[x_{i-1},x_i,x_{i+1}]}  \talert{ data based, absolute\ $2^{\text{nd}}$ derivative\ of interpoplating\ polynomial}
-\end{gather*}}
-\end{frame}
-
-\begin{frame}
-	\frametitle{Adaptive Linear Spline Algorithm\footfullcite{ChoEtal17a}}
-	\only<1-2>{\northeaststuff{3.7}{2.5}{\includegraphics[width=6cm]{ProgramsImages/sampling-funappxg-1.eps}}}
-	\only<3>{\northeaststuff{3.7}{2.5}{\includegraphics[width=6cm]{ProgramsImages/sampling-funappxg-2.eps}}}
-	\only<4>{\northeaststuff{3.7}{2.5}{\includegraphics[width=6cm]{ProgramsImages/sampling-funappxg-3.eps}}}
-	
-	\vspace{-10ex}
-	
-	\parbox{4.2cm}{
-		Given $n_{\init} \ge 4$, $\fC_0 \ge 1$: 
-		
-		\vspace{-3ex}
-		
-		\begin{gather*}
-		\fh  = \left \lceil \frac{3(b-a)}{n_{\init}-1} \right \rceil , \qquad 
-		\fC(h) = \frac{\fC_0 \fh}{\fh - h} \\
-		n = n_{\init}, \qquad 
-		x_i = a + i(b-a)/n
-		\end{gather*}
-	}
-	
-	
-	\vspace{-2ex}
-	
-	\begin{description}
-		\item<2->[Step 1.] Compute data based $\ERR_{i,\pm}(\mX,\vy)$ for $i = 1, \ldots, n$.
-		\item<2->[Step 2.] Construct $\ci$, the index set of subintervals that might be split:
-		\begin{equation*}
-		\ci = \bigl\{i \in 1\! :\! n \ : \ \ERR_{i\pm j,\mp}(\mX,\vy) > \varepsilon, \ j = 0, 1, 2\}
-		\end{equation*}
-		\item<3->[Step 3.]  If $\ci = \emptyset$, return $\alg(f,\varepsilon) = \app(\mX,\vy)$ as the approximation satisfying the error tolerance.  Otherwise split those intervals in $\ci$ with largest width and go to Step 1 (\alert{acquisition function}). 
-	\end{description}
-	
-\end{frame}
-
-
-\begin{frame}
-	\frametitle{Highlights of Adaptive Linear Spline Algorithm\footfullcite{ChoEtal17a}}
-	\only<1,4,7>{\northeaststuff{3.7}{3}{\includegraphics[width=6cm]{ProgramsImages/sampling-funappxg-1.eps}}}
-	\only<2,5,8>{\northeaststuff{3.7}{3}{\includegraphics[width=6cm]{ProgramsImages/sampling-funappxg-2.eps}}}
-	\only<3,6,9->{\northeaststuff{3.7}{3}{\includegraphics[width=6cm]{ProgramsImages/sampling-funappxg-3.eps}}}
-	
-	\vspace{-10ex}
-	
-
-\begin{itemize}[<+->]
-	\item Defined for \alert{cone candidate set, $\cc$}, whose definition \\
-	does not depend on the algorithm
-	
-	\item \alert{Guaranteed} to succeed for all $f \in \cc$
-
-	\item Candidate set $\cc$ \alert{excludes spikes}, \\
-	i.e., two nearby inflection points
-	
-	\item $\cc$ formalizes \alert{what you see is almost what you get}
-
-	\item \alert{Impossible} to have an algorithm for all $f \in \cw^{2,\infty}$ \\
-	since $\cw^{2,\infty}$ contains arbitrarily  large functions that look like $0$
-	
-	\item Adaptive algorithms \alert{do not help for ball} candidate sets 
-	$\cc = \{ f : \norm[\infty]{f''} \le R\}$
-	
-	\item $\cost(\alg,f,\varepsilon,\cc) \asymp \sqrt{\frac{\fC_0 \norm[\alert{\frac 12}]{f''}}{\varepsilon}} \asymp \comp(f,\varepsilon,\cc)$ \alert{ optimal}
-	
-	\item Does not allow for  \alert{smoothness} to be inferred
-	
-	\item Not \alert{multivariate}
-	
-\end{itemize}
-	
-\end{frame}
-
-\section{Multivariate, Reproducing Kernel Hilbert Space}
-
-\begin{frame}{Approximation via Reproducing Kernel Hilbert Spaces (RKHSs) \footfullcite{Fas07a,FasMcC15a}}
-\northeaststuff{3.7}{3}{\includegraphics[width=6cm]{ProgramsImages/fandDataAndAppx.eps}}
-	
-		\vspace{-8ex}
-
-\begin{minipage}{7cm}
-$\cf$ is a \alert{Hilbert space }  with \alert{reproducing kernel} \\ $K : \cx \times \cx \to \reals$ 
-
-\vspace{-4ex}
-\begin{gather*}
-K(\mX,\mX) \talert{ positive definite } \forall \mX \\
-K(\cdot,\vx) \in \cf, \quad 
-f(\vx) = \ip[\cf]{K(\cdot,\vx)}{f} \qquad \forall \vx \in \cx, \\
-\text{e.g., } K(\vt,\vx) = (1 + \norm[2]{\vt - \vx}) \exp\bigl( -\norm[2] {\vt - \vx}\bigr) \talert{ Mat\'ern}
-\end{gather*}
-\end{minipage}
-
-\vspace{-2ex}
-\uncover<2->{Optimal (minimum norm) interpolant is 
-\[
-\app(\mX,\vy) = K(\cdot,\mX)\bigl(K(\mX,\mX) \bigr)^{-1} \vy, \qquad \vy = f(\mX)
-\] 
-
-\vspace{-6ex}
-\begin{align*}
-\norm[\infty]{f - \app(\mX,\vy)}^2  &\le \bignorm[\infty]{K(\cdot,\cdot) -  K(\cdot,\mX)\bigl(K(\mX,\mX) \bigr)^{-1} K(\mX, \cdot)} \ \norm[\cf]{f - \app(\mX,\vy)}^2 \quad \talert{known}\uncover<4->{\\
-& \le \bignorm[\infty]{K(\cdot,\cdot) -  K(\cdot,\mX)\bigl(K(\mX,\mX) \bigr)^{-1} K(\mX, \cdot)} \ \frac{\fC^2(\mX)}{1 - \fC^2(\mX)} \ \norm[\cf]{ \app(\mX,\vy)}^2 =: \alert{\ERR^2(\mX,\vy)}}
-\end{align*}
-\vspace{-1ex}
-\uncover<3->{\[
-\talert{candidate set } \cc = \bigl\{ f \in \cf :  \norm[\cf]{f - \app(\mX,\vy)} \le  \alert{\fC(\mX)} \norm[\cf]{f} \bigr\}
-\]}}
-
-\end{frame}
-
-\begin{frame}{Error and Acquisition for Optimal RKHS Approximation}
-	\only<1>{\northeaststuff{3.7}{3}{\includegraphics[width=6cm]{ProgramsImages/fandDataAndAppx.eps}}}
-	\only<2>{\northeaststuff{3.7}{3}{\includegraphics[width=6cm]{ProgramsImages/fandDataAndAppxAndRMSPE.eps}}}
-	\vspace{-5ex}
-	
-	\begin{minipage}{7cm}
-		$\cf$ is a \alert{Hilbert space }  with \alert{reproducing kernel} \\ $K : \cx \times \cx \to \reals$ 
-		
-		\vspace{-4ex}
-		\begin{gather*}
-		\text{e.g., } K(\vt,\vx) = (1 + \norm[2]{\vt - \vx}) \exp\bigl( -\norm[2] {\vt - \vx}\bigr) \talert{ Mat\'ern} \\
-		\app(\mX,\vy) = K(\cdot,\mX)\bigl(K(\mX,\mX) \bigr)^{-1} \vy, \qquad \vy = f(\mX) \\
-		\talert{candidate set } \cc = \bigl\{ f \in \cf :  \norm[\cf]{f - \app(\mX,\vy)} \le  \alert{\fC(\mX)} \norm[\cf]{f} \bigr\}
-		\end{gather*}
-	\end{minipage}
-	
-	\vspace{-2ex}
-	\begin{align*}
-	\norm[\infty]{f - \app(\mX,\vy)}^2  &\le \bignorm[\infty]{K(\cdot,\cdot) -  K(\cdot,\mX)\bigl(K(\mX,\mX) \bigr)^{-1} K(\mX, \cdot)} \ \norm[\cf]{f - \app(\mX,\vy)}^2 \quad \talert{known}\\
-		& \le \bignorm[\infty]{K(\cdot,\cdot) -  K(\cdot,\mX)\bigl(K(\mX,\mX) \bigr)^{-1} K(\mX, \cdot)} \ \frac{\fC^2(\mX)}{1 - \fC^2(\mX)} \ \norm[\cf]{ \app(\mX,\vy)}^2 =: \alert{\ERR^2(\mX,\vy)} \\
-	\ACQ(\vx,\mX,\vy)  & : = \bigl[K(\vx,\vx) -  K(\vx,\mX)\bigl(K(\mX,\mX) \bigr)^{-1} K(\mX, \vx) \bigr]  \ \frac{\fC^2(\mX)}{1 - \fC^2(\mX)}  \ \underbrace{\norm[\cf]{ \app(\mX,\vy)}^2}_{\alert{\vy^T(K(\mX,\mX) )^{-1} \vy}} \\[-1ex]
-	        \vx_{n+1} &= \argmax_{\vx \in \cx} \ACQ(\vx,\mX,\vy) \text{ \alert{acquisition function}} \\
-	\alg(f,\varepsilon) &= \app(\mX,\vy) \quad \text{for } n^* = \min \, \{ n \in \naturals \colon \ERR(\mX,\vy) \le \varepsilon \} \text{ \alert{stopping criterion}} 
-	\end{align*}
-
-\end{frame}
-
-\begin{frame}{Must Infer Kernel from $\vy = f(\mX)$}
-	\vspace{-2ex}
-	\only<2>{\northeaststuff{3.5}{2.45}{\includegraphics[width=6cm]{ProgramsImages/fandDataAndAppxAndRMSPEOpt.eps}}\vspace{-5ex}}
-		\only<3>{\northeaststuff{3.5}{2.45}{\includegraphics[width=6cm]{ProgramsImages/fandDataAndAppxAndRMSPEOpty.eps}}\vspace{-5ex}}
-		\only<4>{\northeaststuff{3.5}{2.45}{\includegraphics[width=6cm]{ProgramsImages/fandDataAndAppxAndRMSPEOptyFinal50.eps}}\vspace{-5ex}}
-		\only<5>{\northeaststuff{3.5}{2.45}{\includegraphics[width=6cm]{ProgramsImages/fandDataAndAppxAndRMSPEOptyFinal20.eps}}\vspace{-5ex}}
-	
-	
-	\begin{minipage}{8cm}
-		$\cf_{\vtheta}$ is a \alert{Hilbert space }  with \alert{reproducing kernel} $K_{\vtheta}$
-		
-		\vspace{-3ex}
-		\begin{align*}
-		\cc & =  \bigl\{ f \in \mathop{\cup} _{\vtheta} \, \cf_{\vtheta} :  \norm[\cf_{\vtheta^*}]{f - \app(\mX,\vy)} \le  \alert{\fC(\mX)} \norm[\cf_{\vtheta^*}]{f} \\
-		&\qquad \qquad \forall \mX, \ \vy = f(\mX), \ \vtheta^*(\mX,\vy) \text{ given below} \bigr\} \\
-		\only<1-2>{\text{e.g., } & K_{\vtheta}(\vt,\vx) = (1 + \norm[2]{\vtheta \odot(\vt - \vx)}) \exp\bigl( -\norm[2] {\vtheta \odot(\vt - \vx)}\bigr)}
-		\only<3->{\text{e.g., } &  K_{\vtheta}(\vt,\vx) = \exp(\vb^T(\vt+\vx)) \\
-			& \qquad \times (1 + \norm[2]{\va \odot(\vt - \vx)}) \exp\bigl( -\norm[2] {\va \odot(\vt - \vx)}\bigr) , \ 
-		\vtheta  =(\va,\vb)}
-		\end{align*}
-	\end{minipage}
-	
-	\vspace{-2ex}\only<2>{\vspace{2ex}}
-		Choose the $\vtheta$ (inspired by empirical Bayes) \alert{by minimizing the ellipsoid in $\reals^n$ of function data yielding interpolants with no greater norm than that observed:}
-
-	\vspace{-6ex}		
-	\begin{align*}
-\vtheta^* &= \argmin_\vtheta \left[\frac 1n \log \bigl( \det(\mK_\vtheta) \bigr) + \log \bigl ( \vy^T \mK_\vtheta^{-1} \vy \bigr)\right]
-	\\
-	\norm[\infty]{f - \app(\mX,\vy)}^2 
-	& \le \bignorm[\infty]{K(\cdot,\cdot) -  K(\cdot,\mX)\bigl(K(\mX,\mX) \bigr)^{-1} K(\mX, \cdot)} \ \frac{\fC^2(\mX)}{1 - \fC^2(\mX)} \ \vy^T(K(\mX,\mX) )^{-1} \vy =: \alert{\ERR^2(\mX,\vy)} \\
-	\ACQ(\vx,\mX,\vy)  & : = \bigl[K(\vx,\vx) -  K(\vx,\mX)\bigl(K(\mX,\mX) \bigr)^{-1} K(\mX, \vx) \bigr]  \ \frac{\fC^2(\mX)}{1 - \fC^2(\mX)}  \ \vy^T(K(\mX,\mX) )^{-1} \vy \\[-1ex]
-	\vx_{n+1} &= \argmax_{\vx \in \cx} \ACQ(\vx,\mX,\vy) \text{ \alert{acquisition function}}
-	\end{align*}
-	
-\end{frame}
-
-
-\begin{frame}
-	{Cheng and Sandu Function\footfullcite{BinSur13, ChenSan10a}}
-	\begin{tabular}{p{0.32\textwidth}@{\;}p{0.32\textwidth}@{\;}p{0.32\textwidth}}
-		\multicolumn{1}{>{\centering}p{0.32\textwidth}}{$f(\vx) = \cos(x_1 + x_2) \exp(x_1 x_2)$} &
-		\multicolumn{1}{>{\centering}p{0.32\textwidth}}{error w/ Mat\'ern \&  $\vtheta = \vone$} & \multicolumn{1}{>{\centering}p{0.32\textwidth}}{
-		error w/ mod.\ Mat\'ern + opt.\ $\vtheta$ \newline $\varepsilon = 0.05$}
-		\tabularnewline
-		\hspace{-0.75cm}\includegraphics[width = 0.4\textwidth]{ProgramsImages/ChengFunData.eps}
-		&
-		\hspace{-0.6cm}\includegraphics[width = 0.4\textwidth]{ProgramsImages/ChengFunErrNoOpt.eps}
-&
-		\only<1>{\hspace{-0.45cm}\includegraphics[width = 0.4\textwidth]{ProgramsImages/ChengFunErrOpty.eps}}
-		\only<2>{\hspace{-0.45cm}\includegraphics[width = 0.4\textwidth]{ProgramsImages/ChengFunErrOptyFinal.eps}}
-	\end{tabular}
-\end{frame}
-
 
 \section{Summary}
 
