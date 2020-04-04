@@ -186,7 +186,7 @@ Adaptive software libraries \href{https://gailgithub.github.io/GAIL_Dev/}{\beame
     \uncover<3->{\begin{gather*}
         \text{\alert{design or node array} }\mX = (\vx_1, \ldots, \vx_n)^T \in [0,1]^{n \times d}, \qquad \text{\alert{function data} }  \vf = f(\mX)\in \reals^n \\
     c = \int_{[0,1]^{d} \times [0,1]^{d}} C_{\vtheta}(\vt,\vx) \, \dif \vt \dif \vx > 0, \qquad 
-\vc = \int_{[0,1]^{2d}} C_{\vtheta}(\mX,\vt) \, \dif \vt \in [0,1]^{n} , \qquad
+\vc = \int_{[0,1]^{d}} C_{\vtheta}(\mX,\vt) \, \dif \vt \in [0,1]^{n} , \qquad
 \mC = C_{\vtheta}(\mX,\mX)  \in [0,1]^{n \times n} \\
 \int_{[0,1]^d} f(\vx) \, \dif \vx  \, \big \vert \, (\vf = \vy) \sim \cn\Bigl( m[ 1 - \vc^T \mC^{-1}\vone] + \vc \mC^{-1}\vy, s^2(c - \vc^T \mC^{-1}\vc)\Bigr)
     \end{gather*}
@@ -208,7 +208,7 @@ Choosing $n$  large enough to make $2.58s\sqrt{c - \vc^T \mC^{-1}\vc} \le \varep
     
 \end{frame}
 
-\begin{frame}{Infering Gaussian Process Parameters}
+\begin{frame}{Inferring Gaussian Process Parameters}
 	content...
 \end{frame}
 
