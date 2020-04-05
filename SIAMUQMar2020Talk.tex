@@ -2,7 +2,9 @@
 \documentclass[10pt,compress,xcolor={usenames,dvipsnames},aspectratio=169]{beamer}
 %\documentclass[xcolor={usenames,dvipsnames},aspectratio=169]{beamer} %slides and 
 %notes
-\usepackage{amsmath,datetime,
+\usepackage{amsmath,
+	amssymb,
+	datetime,
 	mathtools,
 	bbm,
 	%mathabx,
@@ -220,8 +222,8 @@ Choosing $n$  large enough to make $2.58s\sqrt{c - \vc^T \mC^{-1}\vc} \le \varep
 \vspace{-10ex}
 
 	Using \alert{empirical Bayes}
-	\begin{align*} 
-m_{\MLE} &= \frac{\vone^T \mCInv_\vtheta \vy }{ \vone^T \mCInv_\vtheta \vone}, \qquad
+	\begin{gather*} 
+m_{\MLE} = \frac{\vone^T \mCInv_\vtheta \vy }{ \vone^T \mCInv_\vtheta \vone}, \qquad
 s^2_{\MLE} = 
 \frac{1}{n}
 \vy^T 
@@ -229,7 +231,7 @@ s^2_{\MLE} =
 \frac{ \mCInv_\vtheta \vone \vone^T \mCInv_\vtheta }{\vone^T\mCInv_\vtheta \vone}
 \right] \vy, \\
 \vtheta_{\MLE}
-&= \argmin_{\vtheta} \biggl \{
+= \argmin_{\vtheta} \biggl \{
 \log\left(\vy^T 
 \left[ \mC_\vtheta^{-1} - 
 \frac{ \mCInv_\vtheta \vone \vone^T \mCInv_\vtheta }{\vone^T\mCInv_\vtheta \vone}
@@ -237,12 +239,12 @@ s^2_{\MLE} =
 \right)  
 +  \frac{1}{n} \log(\det(\mC_\vtheta))
 \biggr \}, \\
-\alg(f,\varepsilon) &= 
+\alg(f,\varepsilon) = 
 \left(
 \frac{ (1 - \vone^T  \mCInv_\vtheta\vc_{\vtheta} )  \vone }{ \vone^T \mCInv_\vtheta \vone}   +  \vc_{\vtheta} 
 \right)^T  \mCInv_\vtheta \vy \qquad \text{when }
 2.58 s_{\mathsf{\MLE}} \sqrt{c_{0\vtheta} - \vc_{\vtheta}^T\mC_\vtheta^{-1}\vc_{\vtheta} } \le \varepsilon
-	\end{align*}
+	\end{gather*}
 	
 	\vspace{-4ex}
 	
@@ -253,32 +255,50 @@ s^2_{\MLE} =
 
 \end{frame}
 
-\section{Fast Transforms}
-{Fast Transforms in General}
-If the kernel $C_\vtheta$ and the design $\mX$ match such that
-\begin{align}
-\mC = \mC_\vtheta &= \frac 1n \mV \mLambda \mV^H , 
-\quad \quad \mV^H = n \mV^{-1}, \\
-\nonumber
-\mV &= (\vv_1,\ldots,\vv_n)^T = (\vV_1,\ldots,\vV_n),
-\qquad
-\mC^p  = \frac 1n \mV \mLambda^{p} \mV^H, \qquad \forall p \in \integers.
-\end{align}
-In this and later sections, we drop the $\vtheta$ dependence of various quantities for simplicity of notation.  Here, $\mV^H$ is the Hermitian of $\mV$, $\vC_1,\dots,\vC_n$ are columns of $\mC$,  $\vV_1,\dots,\vV_n$ are columns of $\mV$, and $\vv_1,\dots,\vv_n$ are rows of $\mV$.  The normalization of $\mV$ assumed in \eqref{eqn:ftk_factor} conveniently allows the first eigenvector, $\vV_1$, to be the vector of ones in \eqref{fastcompAssumpB} below.  The columns of $\mV$ are eigenvectors of $\mC$, and $\mLambda$ is a diagonal matrix of eigenvalues of $\mC$.
-For any $n \times 1$ vector $\vb$, define the notation  $\widetilde{\vb} := \mV^H \vb$.
+\section{Fast Bayesian Transforms}
 
-We make three assumptions that facilitate  fast computation:
-\begin{subequations} \label{fastcompAssump}
-	\begin{gather}
-	\label{fastcompAssumpA}
-	\mV \text{ may be identified analytically}, \\
-	\label{fastcompAssumpB}
-	\vv_1 = \vV_1 = \vone, \\
-	\label{fastcompAssumpC}
-	\mV^H \vb  \text{ requires only $\Order(n \log(n))$ operations } \forall \vb.
-	\end{gather}
-\end{subequations}
-We call the transformation $\vb \mapsto \mV^H \vb$ a \emph{fast Bayesian transform} and $C_\vtheta$ a \emph{fast Bayesian transform kernel}.  
+\begin{frame}{Fast Bayesian Transforms in General}
+	
+	\vspace{-4ex} 
+	
+Find a kernel $C_\vtheta$ to \alert{match} the design $\mX$ so that
+\begin{gather*}
+\mC_\vtheta = \frac 1n \mV \mLambda \mV^H , 
+\quad \quad \mV^H = n \mV^{-1}, \qquad
+\mV = (\vv_1,\ldots,\vv_n)^T = (\vV_1,\ldots,\vV_n) \text{ known analytically} \\
+\vv_1 = \vV_1 = \vone, \qquad \vc_\vtheta = \vone, \qquad
+	\widetilde{\vb} := \mV^H \vb  \text{ requires only $\Order(n \log(n))$ operations } \forall \vb.
+\end{gather*}
+$C_\vtheta$ is a \alert{fast Bayesian transform kernel} and $\vb \mapsto \mV^H \vb$ a \alert{fast Bayesian transform (FBT)} 
+
+\vspace{-2ex}
+Then by empirical Bayes
+\begin{gather*}
+\widetilde{\vy} = \talert{\,FBT of function data } \vy , \qquad \vlambda_\vtheta = (\lambda_1 , \ldots, \lambda_n)^T=  \widetilde{\vC}_{\vtheta,1} = \talert{\,FBT of first column of } \mC_\vtheta \\
+	\vtheta_{\MLE} = 
+\argmin_{\vtheta}
+\left[
+\log\left(
+\sum_{i=\alert{2}}^n \frac{\abs{\widetilde{y}_i}^2}{\lambda_{\vtheta, i}}
+\right) 
++ \frac{1}{n}\sum_{i=1}^n \log(\lambda_{\vtheta,i})
+\right]\\
+\alg(f,\varepsilon) =  \frac{\widetilde{y}_1}{n} = \frac 1n \sum_{i=1}^n y_i = \talert{ sample mean}
+\qquad \text{when }
+\frac{2.58}{n}\sqrt{
+	\sum_{i=2}^{n} \frac{\abs{\widetilde{y}_i}^2}{\lambda_{\vtheta,i}}  
+	\,
+	\left( 1 -  \frac{n}{\lambda_{\vtheta,i}} \right) 
+} \le \varepsilon
+\end{gather*}
+Cost is $O(n \log (n))$ times the number of iterations for optimizing $\vtheta$
+
+\end{frame}
+
+\begin{frame}{Examples of FBT Kernels}
+	content...
+\end{frame}
+
 
 \section{Gaussian Process Diagnostics}
 
