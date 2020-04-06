@@ -1,4 +1,4 @@
-.pdf
+*.pdf
 
 *.blg
 
@@ -17,3 +17,7 @@
 *.out
 
 *.bcf
+
+*.xml
+
+*.nav
