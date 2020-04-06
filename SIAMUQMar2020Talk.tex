@@ -259,9 +259,11 @@ s^2_{\MLE} =
 
 \begin{frame}{Fast Bayesian Transforms in General}
 	
-	\vspace{-4ex} 
+	\vspace{-3ex} 
 	
 Find a kernel $C_\vtheta$ to \alert{match} the design $\mX$ so that
+
+\vspace{-6ex}
 \begin{gather*}
 \mC_\vtheta = \frac 1n \mV \mLambda \mV^H , 
 \quad \quad \mV^H = n \mV^{-1}, \qquad
@@ -291,18 +293,43 @@ Then by empirical Bayes
 	\left( 1 -  \frac{n}{\lambda_{\vtheta,i}} \right) 
 } \le \varepsilon
 \end{gather*}
-Cost is $O(n \log (n))$ times the number of iterations for optimizing $\vtheta$
+Cost is \alert{$O(n \log (n))$} times the number of iterations for optimizing $\vtheta$
 
 \end{frame}
 
-\begin{frame}{Examples of FBT Kernels}
-	content...
+\begin{frame}{Types of FBT Kernels}
+	
+	\vspace{-6ex}
+	\begin{tabular}{>{\centering}p{0.47\textwidth}@{\qquad}>{\centering}p{0.47\textwidth}}
+		\multicolumn{2}{>{\centering}p{\textwidth}}{$C_\vtheta(\vt,\vx) = K_\vtheta(\vx \ominus \vt)$, \quad
+			$\{\vx_i\}_{i=1}^{2^m} = $ affine shift of a group under $\oplus$ for $m = 0, 1, \ldots$} \tabularnewline
+		\uncover<2->{Shifted Lattice Nodes, $\oplus = $ addition $\bmod \vone$} & 
+	\uncover<2->{Scrambled Sobol' Nodes, $\oplus = $ bitwise addition}  \tabularnewline
+		\uncover<2->{\includegraphics[height = 4cm]{ProgramsImages/ShiftedLatticePoints.eps}} &
+		\uncover<2->{\includegraphics[height = 4cm]{ProgramsImages/SSobolPoints.eps}} \tabularnewline
+		\uncover<3->{FBT  $ = $ \alert{Fast Fourier Transform}} &
+			\uncover<3->{FBT $ = $ \alert{Fast Walsh Transform}}
+	\end{tabular}
+\end{frame}
+
+\begin{frame}{Flexible FBT Kernel for Lattice Node Designs}
+ $C_\vtheta(\vt,\vx) = K_\vtheta(\vx \ominus \vt)$ must be \alert{positive definite}, where
+$\oplus = $ addition $\bmod \vone$
+\end{frame}
+
+\begin{frame}{Numerical Examples}
+ $C_\vtheta(\vt,\vx) = K_\vtheta(\vx \ominus \vt)$ must be \alert{positive definite}, where
+ $\{\vx_i\}_{i=1}^{2^m} = $ affine shift of a group under $\oplus = $ addition $\bmod \vone$
+ 
+ 
+ 
+ 
 \end{frame}
 
 
 \section{Gaussian Process Diagnostics}
 
-\begin{frame}{title}
+\begin{frame}{Is $f$ a Typical Instance of a Gaussian Process?}
 	content...
 \end{frame}
 
