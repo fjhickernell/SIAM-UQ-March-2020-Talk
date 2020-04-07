@@ -313,9 +313,31 @@ Cost is \alert{$O(n \log (n))$} times the number of iterations for optimizing $\
 \end{frame}
 
 \begin{frame}{Flexible FBT Kernel for Lattice Node Designs}
- $C_\vtheta(\vt,\vx) = K_\vtheta(\vx \ominus \vt)$ must be \alert{positive definite}, where
-$\oplus = $ addition $\bmod \vone$
+	
+\vspace{-4ex}
+
+$C_\vtheta(\vt,\vx) = K_\vtheta(\vx \ominus \vt)$ must be \alert{positive definite}, where
+$\oplus = $ addition $\bmod \vone$.  Common example is 
+
+\vspace{-6ex}
+\begin{align*}
+K_\vtheta(\vx) & = \prod_{j=1}^d [1 + a' B_{2r'}(x_j)] \\
+& = \prod_{j=1}^d [1 + a \kappa_r(x_j)], \quad  \kappa_r(x) = \sum_{\abs{k} \ge 1}\frac{\exp(2\pi\sqrt{-1} kx)}{\abs{k}^{r}}, \quad
+\vtheta = (a,r) \in (0,\infty) \times (1,\infty), \quad r = 2r'
+\end{align*}
+First expression is simple closed form in terms of Bernoulli polynomials, \alert{but $r' \in \naturals$} \\
+Second expression has flexible $r>1$, \alert{but involves infinite sum}
+
+\uncover<2->{An alternative, for which the FBT and the evaluation of $\vlambda$ are \alert{the same asymptotic cost}
+\[
+K_{\vtheta,n}(\vx) 
+= \prod_{j=1}^d \biggl [1 + a \kappa_{r,n}(x_j)   \biggr], \quad \kappa_{r,n}(x) = \sum_{\alert{1  \le  \abs{k} \le n/2}} \frac{\exp(2\pi\sqrt{-1} kx)}{\abs{k}^{r}},\quad \vtheta = (a,r) \in (0,\infty) \times (1,\infty)
+\]
+but now the \alert{kernel changes with $n$}, and $K_{\vtheta,n} \to K_{\vtheta}$ as $ n\to \infty$}
+
 \end{frame}
+
+
 
 \begin{frame}{Numerical Examples}
  
@@ -389,6 +411,25 @@ $\oplus = $ addition $\bmod \vone$
 
 
 \end{document}
+
+\begin{frame}{Computing $\kappa(x)$ for $x = 0, 1/n \ldots, 1-1/n$}
+	\begin{align*}
+	\kappa(i/n) & = \sum_{\abs{k} \ge 1} \frac{\exp(2\pi\sqrt{-1} ki/n)}{\abs{k}^{r}} \\
+	& = \frac{2}{n^{r}}  \sum_{m=1}^\infty \frac{1}{\abs{m}^{r}} 
+	+ \frac{2(-1)^i}{n^r} \sum_{m=0}^{\infty}  \frac{1}{(m + 1/2)^r}  
+	+ 
+	\sum_{k=-n/2+1}^{- 1} \Biggl[ \exp(2\pi\sqrt{-1} ki/n) \sum_{m=-\infty}^{-\infty} \frac{1}{\abs{k+mn}^{r}} \Biggr] \\
+	&\qquad \qquad + 
+	\sum_{k=1}^{n/2- 1} \Biggl[ \exp(2\pi\sqrt{-1} ki/n) \sum_{m=-\infty}^{-\infty} \frac{1}{\abs{k+mn}^{r}} \Biggr] \\
+	& = \frac{2\zeta(r)}{n^{r}} 
+	+ \frac{2(-1)^i \zeta(r,3/2)}{n^r} 
+	+ 
+	\sum_{k=-n/2+1}^{- 1} \Biggl[ \exp(2\pi\sqrt{-1} ki/n) \sum_{m=-\infty}^{-\infty} \frac{1}{\abs{k+mn}^{r}} \Biggr] \\
+	&\qquad \qquad + 
+	\sum_{k=1}^{n/2- 1} \Biggl[ \exp(2\pi\sqrt{-1} ki/n) \sum_{m=-\infty}^{-\infty} \frac{1}{\abs{k+mn}^{r}} \Biggr] \\
+	%	&  = \frac{2 \zeta(r)}{n^{r}} + \sum_{k=1}^n \exp(2\pi\sqrt{-1} ki/n) \Biggl[ \sum_{1}^{\infty} \frac{\exp(2\pi\sqrt{-1} ki/n)}{\abs{m -k/n}^{r}} + \sum_{m=-\infty}^{-\infty} \frac{\exp(2\pi\sqrt{-1} ki/n)}{\abs{k+mn}^{r}} \Biggr] 
+	\end{align*}
+\end{frame}
 
 \begin{frame}{What Should $\fC(\mX)$ Be?}
 	\[
