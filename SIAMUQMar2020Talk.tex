@@ -410,7 +410,6 @@ but now the \alert{kernel changes with $n$}, and $K_{\vtheta,n} \to K_{\vtheta}$
 
 
 
-\end{document}
 
 \begin{frame}{Computing $\kappa(x)$ for $x = 0, 1/n \ldots, 1-1/n$}
 	\begin{align*}
@@ -424,12 +423,15 @@ but now the \alert{kernel changes with $n$}, and $K_{\vtheta,n} \to K_{\vtheta}$
 	& = \frac{2\zeta(r)}{n^{r}} 
 	+ \frac{2(-1)^i \zeta(r,3/2)}{n^r} 
 	+ 
-	\sum_{k=-n/2+1}^{- 1} \Biggl[ \exp(2\pi\sqrt{-1} ki/n) \sum_{m=-\infty}^{-\infty} \frac{1}{\abs{k+mn}^{r}} \Biggr] \\
+	\sum_{k=-n/2+1}^{- 1} \exp(2\pi\sqrt{-1} ki/n) \Biggl[ \frac{1}{\abs{k}^{r}} +  \frac{1}{n^{r}}  \sum_{m=1}^{\infty} \frac{1}{(m - \abs{k}/n)^{r}}  +  \frac{1}{(m + \abs{k}/n)^{r}}\Biggr] \\
 	&\qquad \qquad + 
 	\sum_{k=1}^{n/2- 1} \Biggl[ \exp(2\pi\sqrt{-1} ki/n) \sum_{m=-\infty}^{-\infty} \frac{1}{\abs{k+mn}^{r}} \Biggr] \\
 	%	&  = \frac{2 \zeta(r)}{n^{r}} + \sum_{k=1}^n \exp(2\pi\sqrt{-1} ki/n) \Biggl[ \sum_{1}^{\infty} \frac{\exp(2\pi\sqrt{-1} ki/n)}{\abs{m -k/n}^{r}} + \sum_{m=-\infty}^{-\infty} \frac{\exp(2\pi\sqrt{-1} ki/n)}{\abs{k+mn}^{r}} \Biggr] 
 	\end{align*}
 \end{frame}
+
+\end{document}
+
 
 \begin{frame}{What Should $\fC(\mX)$ Be?}
 	\[
