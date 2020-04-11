@@ -413,21 +413,17 @@ but now the \alert{kernel changes with $n$}, and $K_{\vtheta,n} \to K_{\vtheta}$
 
 \begin{frame}{Computing $\kappa(x)$ for $x = 0, 1/n \ldots, 1-1/n$}
 	\begin{align*}
-	\zeta(s,a) &: = \sum_{k=0}^\infty (k + a)^{-s}  \quad \talert{Hurwitz zeta function}\\
+	\zeta(s,a) &: = \sum_{m=0}^\infty (a+m)^{-s}  \quad \talert{Hurwitz zeta function}\\
 	\kappa(i/n) & = \sum_{\abs{k} \ge 1} \frac{\exp(2\pi\sqrt{-1} ki/n)}{\abs{k}^{r}} \\
 	& = \frac{2}{n^{r}}  \sum_{m=1}^\infty \frac{1}{\abs{m}^{r}} 
-	+ \frac{2(-1)^i}{n^r} \sum_{m=0}^{\infty}  \frac{1}{(m + 1/2)^r}  
 	+ 
-	\sum_{k=-n/2+1}^{- 1} \Biggl[ \exp(2\pi\sqrt{-1} ki/n) \sum_{m=-\infty}^{-\infty} \frac{1}{\abs{k+mn}^{r}} \Biggr] \\
-	&\qquad \qquad + 
-	\sum_{k=1}^{n/2- 1} \Biggl[ \exp(2\pi\sqrt{-1} ki/n) \sum_{m=-\infty}^{-\infty} \frac{1}{\abs{k+mn}^{r}} \Biggr] \\
-	& = \frac{2\zeta(r)}{n^{r}} 
-	+ \frac{2(-1)^i \zeta(r,3/2)}{n^r} 
+	\sum_{k=-n/2}^{- 1}  \sum_{m=-\infty}^{-\infty} \frac{\exp(2\pi\sqrt{-1} ki/n)}{\abs{k+mn}^{r}} 
+	+ \sum_{k=1}^{n/2-`}   \sum_{m=-\infty}^{-\infty} \frac{\exp(2\pi\sqrt{-1} ki/n)}{\abs{k+mn}^{r}}  \\
+	& = \frac{1}{n^{r}} \Biggl\{2\zeta(r)
 	+ 
-	\sum_{k=-n/2+1}^{- 1} \exp(2\pi\sqrt{-1} ki/n) \Biggl[ \frac{1}{\abs{k}^{r}} +  \frac{1}{n^{r}}  \sum_{m=1}^{\infty} \frac{1}{(m - \abs{k}/n)^{r}}  +  \frac{1}{(m + \abs{k}/n)^{r}}\Biggr] \\
+	\sum_{k=-n/2}^{- 1} \exp(2\pi\sqrt{-1} ki/n) \bigl[ \zeta(r,\abs{k}/n) + \zeta(r,1-\abs{k}/n)\bigr] \\
 	&\qquad \qquad + 
-	\sum_{k=1}^{n/2- 1} \Biggl[ \exp(2\pi\sqrt{-1} ki/n) \sum_{m=-\infty}^{-\infty} \frac{1}{\abs{k+mn}^{r}} \Biggr] \\
-	%	&  = \frac{2 \zeta(r)}{n^{r}} + \sum_{k=1}^n \exp(2\pi\sqrt{-1} ki/n) \Biggl[ \sum_{1}^{\infty} \frac{\exp(2\pi\sqrt{-1} ki/n)}{\abs{m -k/n}^{r}} + \sum_{m=-\infty}^{-\infty} \frac{\exp(2\pi\sqrt{-1} ki/n)}{\abs{k+mn}^{r}} \Biggr] 
+	\sum_{k=1}^{n/2- 1} \exp(2\pi\sqrt{-1} ki/n) \bigl[ \zeta(r,\abs{k}/n) + \zeta(r,1-\abs{k}/n)\bigr] 
 	\end{align*}
 \end{frame}
 
