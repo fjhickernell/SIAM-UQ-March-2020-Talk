@@ -312,7 +312,7 @@ Cost is \alert{$O(n \log (n))$} times the number of iterations for optimizing $\
 	\end{tabular}
 \end{frame}
 
-\begin{frame}{Flexible FBT Kernel for Lattice Node Designs}
+\begin{frame}[label=flexible]{Flexible FBT Kernel for Lattice Node Designs}
 	
 \vspace{-4ex}
 
@@ -331,7 +331,7 @@ K_\vtheta(\vx) & = \prod_{j=1}^d [1 + a' B_{2r'}(x_j)] = \prod_{j=1}^d [1 + a \k
 	\[
 	\lambda_\vtheta =  \widetilde{\vC}_{\vtheta,1}, \qquad \text{where } \vC_{\vtheta,1} = \Bigl(  K_{\vtheta}(\vx_i \ominus \vx_1)\Bigr)_{i=1}^n,  \text{ which only depends on } \kappa_r(\ell/n) \text{ for } \ell = 0, \ldots, n-1
 	\]
-\uncover<3->{Moreover, $\bigl( \kappa_r(\ell/n) \bigr)_{\ell = 0}^{n-1}$ can be computed using \alert{one FFT}.
+\uncover<3->{Moreover, $\bigl( \kappa_r(\ell/n) \bigr)_{\ell = 0}^{n-1}$ can be computed using \alert{one FFT} \hyperlink{kappaDeriv}{\beamergotobutton{details}}
 }}
 
 \end{frame}
@@ -410,7 +410,8 @@ K_\vtheta(\vx) & = \prod_{j=1}^d [1 + a' B_{2r'}(x_j)] = \prod_{j=1}^d [1 + a \k
 
 
 
-\begin{frame}{Computing $\kappa(x)$ for $x = 0, 1/n \ldots, 1-1/n$}
+\begin{frame}[label=kappaDeriv]{Computing $\kappa(x)$ for $x = 0, 1/n \ldots, 1-1/n$}
+	\vspace{-8ex}
 	\begin{align*}
 	\zeta(s,a) &: = \sum_{m=0}^\infty (a+m)^{-s}  \quad \talert{Hurwitz zeta function}\\
 	\kappa_r(\ell/n) & = \sum_{\abs{k} \ge 1} \frac{\exp(2\pi\sqrt{-1} k\ell/n)}{\abs{k}^{r}} 
@@ -425,6 +426,7 @@ K_\vtheta(\vx) & = \prod_{j=1}^d [1 + a' B_{2r'}(x_j)] = \prod_{j=1}^d [1 + a \k
 	\widetilde{\vkappa}_r & : = n^{-r}\bigl(2 \zeta(r), \zeta(r,1/n) + \zeta(r,(n-1)/n), \ldots, \zeta(r,(n-1)/n) + \zeta(r,1/n)  \bigr)^T \\
 	\mW & = \bigl(\exp( 2 \pi \sqrt{-1} k \ell/n)\bigr)_{k,\ell =0}^{n-1}
 	\end{align*}
+	\hyperlink{flexible<3>}{\beamerreturnbutton{return}}
 \end{frame}
 
 \end{document}
