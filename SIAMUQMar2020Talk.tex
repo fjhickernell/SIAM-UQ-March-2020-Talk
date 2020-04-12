@@ -350,7 +350,18 @@ K_\vtheta(\vx) & = \prod_{j=1}^d [1 + a' B_{2r'}(x_j)] = \prod_{j=1}^d [1 + a \k
 \section{Gaussian Process Diagnostics}
 
 \begin{frame}{Is $f$ a Typical Instance of a Gaussian Process?}
-	content...
+If $f \in \GP(m,s^2C_\vtheta)$, then $\vZ := s^{-1} n^{-1}\mV \mLambda_\vtheta^{-1/2} \mV^H ( \vf - m\vone) \sim \cn(\vzero,\mI)$.  Generate the data 
+\[
+\vz = \frac{1}{n s_{\MLE} } \mV \mLambda_{\vtheta_{\MLE}}^{-1/2} \mV^H ( \vy - m_{\MLE}\vone) = 
+\left[\sum_{i=2}^n \frac{\abs{\widetilde{y}_i}^2}{\lambda_i} \right]^{-1} \mV \mLambda_{\vtheta_{\MLE}}^{-1/2} ( \widetilde{\vy} - \widetilde{y}_1 \ve_1)
+\]
+
+\begin{tabular}{p{0.6\textwidth}>{\centering}p{0.35\textwidth}}
+Here are Q-Q plots of $\vz$ versus the standard Gaussian distribution
+&
+a
+\end{tabular}
+
 \end{frame}
 
 \section{Summary}
