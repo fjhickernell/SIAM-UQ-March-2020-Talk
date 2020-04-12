@@ -329,9 +329,9 @@ K_\vtheta(\vx) & = \prod_{j=1}^d [1 + a' B_{2r'}(x_j)] = \prod_{j=1}^d [1 + a \k
 
 \uncover<2->{\alert{But} all we need to compute the integral and credible interval is $\widetilde{\vy}$ and 
 	\[
-	\lambda_\vtheta =  \widetilde{\vC}_{\vtheta,1}, \qquad \text{where } \vC_{\vtheta,1} = \Bigl(  K_{\vtheta}(\vx_i \ominus \vx_1)\Bigr)_{i=1}^n,  \text{ which only depends on } \kappa(\ell/n) \text{ for } \ell = 0, \ldots, n-1
+	\lambda_\vtheta =  \widetilde{\vC}_{\vtheta,1}, \qquad \text{where } \vC_{\vtheta,1} = \Bigl(  K_{\vtheta}(\vx_i \ominus \vx_1)\Bigr)_{i=1}^n,  \text{ which only depends on } \kappa_r(\ell/n) \text{ for } \ell = 0, \ldots, n-1
 	\]
-\uncover<3->{Moreover, $\bigl( \kappa(\ell/n) \bigr)_{\ell = 0}^{n-1}$ can be computed using one FFT.
+\uncover<3->{Moreover, $\bigl( \kappa_r(\ell/n) \bigr)_{\ell = 0}^{n-1}$ can be computed using \alert{one FFT}.
 }}
 
 \end{frame}
@@ -421,7 +421,9 @@ K_\vtheta(\vx) & = \prod_{j=1}^d [1 + a' B_{2r'}(x_j)] = \prod_{j=1}^d [1 + a \k
 	& = \frac{1}{n^{r}} \biggl\{2\zeta(r)
 	+ 
 	\sum_{k=1}^{n - 1} \exp(2\pi\sqrt{-1} k\ell/n) \bigl[ \zeta(r,k/n) + \zeta(r,1-k/n)\bigr] \biggr\} \\
-	\vkappa_r & = \bigl( \kappa(\ell/n) \bigr)_{\ell = 0}^{n-1} = \mW^H \bigl(2 \zeta(r), \zeta(r,1/n) + \zeta(r,(n-1)/n), \ldots, \zeta(r,(n-1)/n) + \zeta(r,1/n)  \bigr)^T
+	\vkappa_r & = \bigl( \kappa(\ell/n) \bigr)_{\ell = 0}^{n-1} = \mW^H \widetilde{\vkappa}_r \\
+	\widetilde{\vkappa}_r & : = n^{-r}\bigl(2 \zeta(r), \zeta(r,1/n) + \zeta(r,(n-1)/n), \ldots, \zeta(r,(n-1)/n) + \zeta(r,1/n)  \bigr)^T \\
+	\mW & = \bigl(\exp( 2 \pi \sqrt{-1} k \ell/n)\bigr)_{k,\ell =0}^{n-1}
 	\end{align*}
 \end{frame}
 
