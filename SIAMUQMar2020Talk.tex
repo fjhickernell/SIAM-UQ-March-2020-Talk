@@ -321,19 +321,18 @@ $\oplus = $ addition $\bmod \vone$.  Common example is
 
 \vspace{-6ex}
 \begin{align*}
-K_\vtheta(\vx) & = \prod_{j=1}^d [1 + a' B_{2r'}(x_j)] \\
-& = \prod_{j=1}^d [1 + a \kappa_r(x_j)], \quad  \kappa_r(x) = \sum_{\abs{k} \ge 1}\frac{\exp(2\pi\sqrt{-1} kx)}{\abs{k}^{r}}, \quad
-\vtheta = (a,r) \in (0,\infty) \times (1,\infty), \quad r = 2r'
+K_\vtheta(\vx) & = \prod_{j=1}^d [1 + a' B_{2r'}(x_j)] = \prod_{j=1}^d [1 + a \kappa_r(x_j)], \qquad
+\vtheta = (a,r) \in (0,\infty) \times (1,\infty), \quad r = 2r'\\
+\kappa_r(x) &   : = \sum_{\abs{k} \ge 1}\frac{\exp(2\pi\sqrt{-1} kx)}{\abs{k}^{r}} \qquad
+   \text{$B_{2r'}$ closed form, \alert{but $r' \in \naturals$},\quad $\kappa_r$ defined for  $r>1$, \alert{but infinite sum}}
 \end{align*}
-First expression is simple closed form in terms of Bernoulli polynomials, \alert{but $r' \in \naturals$} \\
-Second expression has flexible $r>1$, \alert{but involves infinite sum}
 
-\uncover<2->{An alternative, for which the FBT and the evaluation of $\vlambda$ are \alert{the same asymptotic cost}
-\[
-K_{\vtheta,n}(\vx) 
-= \prod_{j=1}^d \biggl [1 + a \kappa_{r,n}(x_j)   \biggr], \quad \kappa_{r,n}(x) = \sum_{\alert{1  \le  \abs{k} \le n/2}} \frac{\exp(2\pi\sqrt{-1} kx)}{\abs{k}^{r}},\quad \vtheta = (a,r) \in (0,\infty) \times (1,\infty)
-\]
-but now the \alert{kernel changes with $n$}, and $K_{\vtheta,n} \to K_{\vtheta}$ as $ n\to \infty$}
+\uncover<2->{\alert{But} all we need to compute the integral and credible interval is $\widetilde{\vy}$ and 
+	\[
+	\lambda_\vtheta =  \widetilde{\vC}_{\vtheta,1}, \qquad \text{where } \vC_{\vtheta,1} = \Bigl(  K_{\vtheta}(\vx_i \ominus \vx_1)\Bigr)_{i=1}^n,  \text{ which only depends on } \kappa(\ell/n) \text{ for } \ell = 0, \ldots, n-1
+	\]
+\uncover<3->{Moreover, $\bigl( \kappa(\ell/n) \bigr)_{\ell = 0}^{n-1}$ can be computed using one FFT.
+}}
 
 \end{frame}
 
@@ -414,16 +413,15 @@ but now the \alert{kernel changes with $n$}, and $K_{\vtheta,n} \to K_{\vtheta}$
 \begin{frame}{Computing $\kappa(x)$ for $x = 0, 1/n \ldots, 1-1/n$}
 	\begin{align*}
 	\zeta(s,a) &: = \sum_{m=0}^\infty (a+m)^{-s}  \quad \talert{Hurwitz zeta function}\\
-	\kappa(i/n) & = \sum_{\abs{k} \ge 1} \frac{\exp(2\pi\sqrt{-1} ki/n)}{\abs{k}^{r}} \\
-	& = \frac{2}{n^{r}}  \sum_{m=1}^\infty \frac{1}{\abs{m}^{r}} 
+	\kappa_r(\ell/n) & = \sum_{\abs{k} \ge 1} \frac{\exp(2\pi\sqrt{-1} k\ell/n)}{\abs{k}^{r}} 
+	= \frac{2}{n^{r}}  \sum_{m=1}^\infty \frac{1}{\abs{m}^{r}} 
 	+ 
-	\sum_{k=-n/2}^{- 1}  \sum_{m=-\infty}^{-\infty} \frac{\exp(2\pi\sqrt{-1} ki/n)}{\abs{k+mn}^{r}} 
-	+ \sum_{k=1}^{n/2-`}   \sum_{m=-\infty}^{-\infty} \frac{\exp(2\pi\sqrt{-1} ki/n)}{\abs{k+mn}^{r}}  \\
-	& = \frac{1}{n^{r}} \Biggl\{2\zeta(r)
+	\sum_{k=1}^{n-1}  \sum_{m=-\infty}^{-\infty} \frac{\exp(2\pi\sqrt{-1} k\ell/n)}{\abs{k+mn}^{r}} 
+	\\
+	& = \frac{1}{n^{r}} \biggl\{2\zeta(r)
 	+ 
-	\sum_{k=-n/2}^{- 1} \exp(2\pi\sqrt{-1} ki/n) \bigl[ \zeta(r,\abs{k}/n) + \zeta(r,1-\abs{k}/n)\bigr] \\
-	&\qquad \qquad + 
-	\sum_{k=1}^{n/2- 1} \exp(2\pi\sqrt{-1} ki/n) \bigl[ \zeta(r,\abs{k}/n) + \zeta(r,1-\abs{k}/n)\bigr] 
+	\sum_{k=1}^{n - 1} \exp(2\pi\sqrt{-1} k\ell/n) \bigl[ \zeta(r,k/n) + \zeta(r,1-k/n)\bigr] \biggr\} \\
+	\vkappa_r & = \bigl( \kappa(\ell/n) \bigr)_{\ell = 0}^{n-1} = \mW^H \bigl(2 \zeta(r), \zeta(r,1/n) + \zeta(r,(n-1)/n), \ldots, \zeta(r,(n-1)/n) + \zeta(r,1/n)  \bigr)^T
 	\end{align*}
 \end{frame}
 
