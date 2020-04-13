@@ -1,5 +1,7 @@
 gail.InitializeWorkspaceDisplay
 
+
+%% Tests with random function
 rArray = [1.5 2 4];
 nrArr = size(rArray,2);
 fParArray = [0.5 1 2; 1 1 1; 1 1 1];
@@ -20,7 +22,7 @@ for jjj = 1:nrArr
    end
 end
 
-%% 
+%% Plot figures for random function
 figure
 colorArray = {MATLABBlue,MATLABOrange,MATLABGreen,MATLABCyan,MATLABMaroon,MATLABPurple};
 nColArray = length(colorArray);
@@ -41,4 +43,15 @@ xlabel('Inferred \(r\)')
 ylabel('Inferred \(\theta\)')
 print('-depsc',[fName '-rthInfer-n-' int2str(npts) '-d-' ...
    int2str(dim)])
+
+%% Keister example
+fwh = 2;
+dim = 3;
+npts = 2^6;
+nRep = 20;
+nPlot = 2;
+[~, rOptAll, thOptAll, fName] = ...
+   MWE_gaussian_diagnostics_engine(fwh,dim,npts, ...
+   [],[],nRep,nPlot);
+
 

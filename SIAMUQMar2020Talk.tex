@@ -350,16 +350,37 @@ K_\vtheta(\vx) & = \prod_{j=1}^d [1 + a' B_{2r'}(x_j)] = \prod_{j=1}^d [1 + a \k
 \section{Gaussian Process Diagnostics}
 
 \begin{frame}{Is $f$ a Typical Instance of a Gaussian Process?}
+	
+	\vspace{-2ex}
 If $f \in \GP(m,s^2C_\vtheta)$, then $\vZ := s^{-1} n^{-1}\mV \mLambda_\vtheta^{-1/2} \mV^H ( \vf - m\vone) \sim \cn(\vzero,\mI)$.  Generate the data 
 \[
 \vz = \frac{1}{n s_{\MLE} } \mV \mLambda_{\vtheta_{\MLE}}^{-1/2} \mV^H ( \vy - m_{\MLE}\vone) = 
 \left[\sum_{i=2}^n \frac{\abs{\widetilde{y}_i}^2}{\lambda_i} \right]^{-1} \mV \mLambda_{\vtheta_{\MLE}}^{-1/2} ( \widetilde{\vy} - \widetilde{y}_1 \ve_1)
 \]
 
-\begin{tabular}{p{0.6\textwidth}>{\centering}p{0.35\textwidth}}
-Here are Q-Q plots of $\vz$ versus the standard Gaussian distribution
+\vspace{-2ex}
+\begin{tabular}{m{0.53\textwidth}>{\centering}m{0.44\textwidth}}
+Q-Q plots of $\vz$ vs.\ standard Gaussian
+
+\bigskip
+
+\uncover<2->{Random function
+\[
+\begin{aligned}
+f(\vx) & = \widehat{f}_0  \\
+& + \sum_{\vk \in \{1, \ldots, N\}^d} \Bigl[\widehat{f}_c(\vk) \cos(2\pi \vk^T \vx) + \widehat{f}_s(\vk)\sin(2\pi \vk^T \vx)\Bigr] \\
+& \qquad  \widehat{f}_0, \  \widehat{f}_c(\vk), \ \widehat{f}_s(\vk) \IIDsim \cn\biggl(0,a^{\norm[0]{\vk}} b^{d-\norm[0]{\vk}}\prod_{k_j \ne 0} k_j^{-r}\biggr) \\
+& \qquad \theta = a/b
+\end{aligned}
+\]}
 &
-a
+\includegraphics<2>[width = 0.44\textwidth]{ProgramsImages/rand-QQPlot-n-64-d-2-r-150-th-25-1.eps}
+\includegraphics<3>[width = 0.44\textwidth]{ProgramsImages/rand-QQPlot-n-64-d-2-r-150-th-25-2.eps}
+\includegraphics<4>[width = 0.44\textwidth]{ProgramsImages/rand-QQPlot-n-64-d-2-r-150-th-100-1.eps}
+\includegraphics<5>[width = 0.44\textwidth]{ProgramsImages/rand-QQPlot-n-64-d-2-r-150-th-100-2.eps}
+\includegraphics<6>[width = 0.44\textwidth]{ProgramsImages/rand-QQPlot-n-64-d-2-r-400-th-400-1.eps}
+\includegraphics<7>[width = 0.44\textwidth]{ProgramsImages/rand-QQPlot-n-64-d-2-r-400-th-400-2.eps}
+\includegraphics<8>[width = 0.4\textwidth]{ProgramsImages/rand-rthInfer-n-64-d-2.eps}
 \end{tabular}
 
 \end{frame}

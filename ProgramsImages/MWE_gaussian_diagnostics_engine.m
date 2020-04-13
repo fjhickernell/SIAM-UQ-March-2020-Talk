@@ -21,21 +21,24 @@ ptransform = ptransforms{whEx};
 rOptAll(nReps,1) = 0;
 thOptAll(nReps,1) = 0;
 
-
-for iii = 1:nReps
-  
   %parameters for random function
   %seed = 202326;
-  seed = randi([1,1e6],1,1);
-  rfun = r/2;
-  f_mean = fpar(3);
-  f_std_a = fpar(1);
-  f_std_b = fpar(2);
-  theta = (f_std_a/f_std_b)^2;
-  
+if whEx == 3
+   rfun = r/2;
+   f_mean = fpar(3);
+   f_std_a = fpar(1);
+   f_std_b = fpar(2);
+   theta = (f_std_a/f_std_b)^2;
+else
+   theta = NaN
+end
+
+for iii = 1:nReps
+  seed = randi([1,1e6],1,1) %different each rep
+
   shift = rand(1,dim);
   
-  [~,xlat] = simple_lattice_gen(npts,dim,shift,true);
+  [xpts,xlat] = simple_lattice_gen(npts,dim,shift,true);
   
   if strcmp(fName,'ExpCos')
     integrand = @(x) exp(sum(cos(2*pi*x), 2));
@@ -49,67 +52,67 @@ for iii = 1:nReps
   
   integrand_p = doPeriodTx(integrand, ptransform);
   
-  y = integrand_p(xlat); %function data
+  y = integrand_p(xpts); %function data
   ftilde = fft(y); %fourier coefficients
   ftilde(1) = 0;  % ftilde = \mV^H(\vf - m \vone), subtract mean
   if dim==1
-    hFigIntegrand = figure; scatter(xlat, y, 10)
+    hFigIntegrand = figure; scatter(xpts, y, 10)
     title(sprintf('%s_n-%d_Tx-%s', ...
       fName, npts, ptransform), 'interpreter','none')
     saveas(hFigIntegrand, sprintf('%s_n-%d_Tx-%s_rFun-%1.2f.png', ...
       fName, npts, ptransform, rfun))
   end
   
-      objfun = @(lnParams) ...
-        ObjectiveFunction(exp(lnParams(1)),1+exp(lnParams(2)),xlat,(ftilde));
-      %% Plot the objective function
-      lnthetarange = (-2:0.2:2);
-      lnorderrange = (-1:0.1:1);
-      [lnthth,lnordord] = meshgrid(lnthetarange,lnorderrange);
-      objobj = lnthth;
-      for ii =  1:size(lnthth,1)
-         for jj = 1:size(lnthth,2)
-            objobj(ii,jj) = objfun([lnthth(ii,jj); lnordord(ii,jj)]);
-         end
+   objfun = @(lnParams) ...
+     ObjectiveFunction(exp(lnParams(1)),1+exp(lnParams(2)),xlat,(ftilde));
+   %% Plot the objective function
+   lnthetarange = (-2:0.2:2);
+   lnorderrange = (-1:0.1:1);
+   [lnthth,lnordord] = meshgrid(lnthetarange,lnorderrange);
+   objobj = lnthth;
+   for ii =  1:size(lnthth,1)
+      for jj = 1:size(lnthth,2)
+         objobj(ii,jj) = objfun([lnthth(ii,jj); lnordord(ii,jj)]);
       end
+   end
    if iii <= nPlots
       figure
-      s = surf(lnthth,lnordord,objobj);
-      set(s,'EdgeColor','none','facecolor','interp')
+      shandle = surf(lnthth,lnordord,objobj);
+      set(shandle,'EdgeColor','none','facecolor','interp')
       set(gca,'xtick',log([0.2 0.4 1 3 7]),'xticklabel',{'0.2','0.4','1','3','7'}, ...
          'ytick',log([1.4 1.6 2 2.6 3.7]-1), 'yticklabel',{'1.4', '1.6','2','2.6','3.7'})
       xlabel('\(\theta\)')
       ylabel('\(r\)')
    end
       
-      [objMinAppx,which] = min(objobj,[],'all','linear');
-      [whichrow,whichcol] = ind2sub(size(lnthth),which);
-      lnthOptAppx = lnthth(whichrow,whichcol);
-      thetaOptAppx = exp(lnthOptAppx)
-      lnordOptAppx = lnordord(whichrow,whichcol);
-      orderOptAppx = 1+exp(lnordOptAppx)
-      objMinAppx
+   [objMinAppx,which] = min(objobj,[],'all','linear');
+   [whichrow,whichcol] = ind2sub(size(lnthth),which);
+   lnthOptAppx = lnthth(whichrow,whichcol);
+   thetaOptAppx = exp(lnthOptAppx)
+   lnordOptAppx = lnordord(whichrow,whichcol);
+   orderOptAppx = 1+exp(lnordOptAppx)
+   objMinAppx
 
       
-      %% Optimize the objective function
-      [lnParamsOpt,objMin] = fminsearch(objfun,[lnthOptAppx;lnordOptAppx],optimset('TolX',1e-3));
-      objMin
-      thetaOpt = exp(lnParamsOpt(1));
-      rOpt = 1 + exp(lnParamsOpt(2));
-      rOptAll(iii) = rOpt;
-      thOptAll(iii) = thetaOpt;
+   %% Optimize the objective function
+   [lnParamsOpt,objMin] = fminsearch(objfun,[lnthOptAppx;lnordOptAppx],optimset('TolX',1e-3));
+   objMin
+   thetaOpt = exp(lnParamsOpt(1));
+   rOpt = 1 + exp(lnParamsOpt(2));
+   rOptAll(iii) = rOpt;
+   thOptAll(iii) = thetaOpt;
 
    if iii <= nPlots
       hold on 
       scatter3(lnParamsOpt(1),lnParamsOpt(2),objfun(lnParamsOpt)*1.002,1000,MATLABYellow,'.')%     end
-      print('-depsc',[ fName '-ObjFun-n-' int2str(npts) '-r-' int2str(r*100) ...
-         '-th-' int2str(100*theta) '-case-' int2str(iii) '.eps']);
+      print('-depsc',[ fName '-ObjFun-n-' int2str(npts) '-d-' int2str(dim) ...
+         '-r-' int2str(r*100) '-th-' int2str(100*theta) '-case-' int2str(iii) '.eps']);
    end
   
   % lambda1 = kernel(r, xlat_, thetaOpt);
   vlambda = kernel2(thetaOpt, rOpt, xlat);
-  s = sqrt(sum(abs(ftilde(2:end).^2)./vlambda(2:end))/(npts^2));
-  vlambda = (s^2)*vlambda;
+  s2 = sum(abs(ftilde(2:end).^2)./vlambda(2:end))/(npts^2);
+  vlambda = (s2)*vlambda;
 
   % apply transform
   % $\vZ = \frac 1n \mV \mLambda^{-\frac 12} \mV^H(\vf - m \vone)$
@@ -121,13 +124,6 @@ for iii = 1:nReps
    if iii <= nPlots
       create_plots('qqplot', vz_real, fName, dim, iii, r, rOpt, theta, thetaOpt)
    end
-  % Shapiro-Wilk test
-  %   [H, pValue, W] = swtest(w_ftilde);
-  %   Hval='true';
-  %   if H==true
-  %     Hval='false';
-  %   end
-  %   fprintf('Shapiro-Wilk test: Normal=%s, pValue=%1.3f, W=%1.3f\n', Hval, pValue, W);
   fprintf('r = %7.5f, rOpt = %7.5f, theta = %7.5f, thetaOpt = %7.5f\n', ...
      r,rOpt,theta,thetaOpt);
   
@@ -139,16 +135,14 @@ end
 
 function create_plots(type, vz_real, fName, dim, iii, r, rOpt, theta, thetaOpt)
 hFigNormplot = figure();
-set(hFigNormplot,'defaultaxesfontsize',16, ...
-  'defaulttextfontsize',16, ... %make font larger
-  'defaultLineLineWidth',0.75, 'defaultLineMarkerSize',8)
+set(hFigNormplot,'defaultaxesfontsize',24, ...
+  'defaulttextfontsize',24, ... %make font larger
+  'defaultLineLineWidth',2, 'defaultLineMarkerSize',8)
 if strcmp(type, 'normplot')
   normplot(vz_real)
 else
-%   qqplot(vz_real); hold on
-%   plot([-3 3], [-3 3],'-')
   n = length(vz_real);
-  stNorm = norminv(((1:n)-1/2)'/n);
+  stNorm = norminv(((1:n)-1/2)'/n); %quantiles of standard normal
   plot(stNorm,sort(vz_real),'.','MarkerSize',20);
   hold on
   plot([-3 3], [-3 3],'-','linewidth',4)
@@ -157,17 +151,13 @@ else
 end
 
 title(['\(d = ' num2str(dim) ...
+   ',\ n = ' num2str(n) ...
    ',\ r = ' num2str(r,3) ...
    ',\ r_{\textup{opt}} = ' num2str(rOpt,3) ...
    ',\ \theta = ' num2str(theta,3) ...
    ',\ \theta_{\textup{opt}} = ' num2str(thetaOpt,3) '\)'])
-print('-depsc',[fName '-QQPlot-n-' int2str(n) '-d-' ...
-   int2str(dim) '-' int2str(iii) '.eps'])
-   
-% title(sprintf('%s r=%1.2f rOpt=%1.2f, theta=%1.2f, thetaOpt=%1.2f', ...
-%        fName, r, rOpt, theta, thetaOpt))
-% saveas(hFigNormplot, sprintf('%s_%s_n-%d_Tx-%s_rOpt-%1.3f.png', ...
-%        type, fName, npts, ptransform, r))
+print('-depsc',[fName '-QQPlot-n-' int2str(n) '-d-' int2str(dim) ...
+         '-r-' int2str(r*100) '-th-' int2str(100*theta) '-' int2str(iii) '.eps'])
 end
 
 % gaussian random function
@@ -185,17 +175,17 @@ for d = 2:dim
    kvec(1:d,1:Nd) = [repmat(kvec(1:d-1,1:Ndm1),1,N1); ...
       reshape(repmat(0:N1-1,Ndm1,1),1,Nd)];
 end
-f_c = randn(1,Nall-1);
-f_s = randn(1,Nall-1);
-f_0 = c + (b.^d)*randn(1, 1);
 whZero = sum(kvec==0,1);
 abfac = a.^(d - whZero(2:Nall)) .* b.^whZero(2:Nall);
 kbar = prod(max(kvec(:,2:Nall),1),1);
+totfac = abfac./(kbar.^rfun);
+f_c = randn(1,Nall-1).*totfac;
+f_s = randn(1,Nall-1).*totfac;
+f_0 = c + (b.^d)*randn(1, 1);
 argx = (2*pi*xpts) * kvec(:,2:Nall);
-f_c_ = (f_c.*(abfac./kbar.^(rfun))).*cos(argx);
-f_s_ = (f_s.*(abfac./kbar.^(rfun))).*sin(argx);
-fval = f_0 + sum(f_c_+ f_s_,2) ;
-% figure; plot(fval, '.')
+f_c_ = f_c.*cos(argx);
+f_s_ = f_s.*sin(argx);
+fval = f_0 + sum(f_c_+ f_s_,2);
 end
 
 function Lambda = kernel(theta, r, xun)
@@ -231,32 +221,6 @@ C1 = prod(1 + temp_, 2);
 vlambda = real(fft(C1));
 end
 
-% function vlambda = kernel2(r, xun, theta)
-% constMult = 1/2;
-% kernelFunc = @(x) truncated_series_kernel(x,r);
-%         
-% temp_ = (theta*constMult)*kernelFunc(xun);
-% C1 = prod(1 + temp_, 2);
-% 
-% % matlab's builtin fft is much faster and accurate
-% % eigenvalues must be real : Symmetric pos definite Kernel
-% vlambda = real(fft(C1));
-% end
-% function g = truncated_series(N, r)
-% tilde_g_0 = 0;
-% m = 1:(-1 + N/2);
-% tilde_g_h1 = N./abs(m).^(r);
-% m = (N/2):(-1 + N);
-% tilde_g_h2 = N./abs(N-m).^(r);
-% tilde_g = [tilde_g_0 tilde_g_h1 tilde_g_h2];
-% g = ifft(tilde_g)';
-% end
-% 
-% function c = truncated_series_kernel(x,r)
-% n = size(x, 1);
-% g = truncated_series(n,r);
-% c = g(1 + x*n);
-% end
 
 function [loss,Lambda,RKHSnorm] = ObjectiveFunction(theta,order,xun,ftilde)
 tol = 100*eps;
