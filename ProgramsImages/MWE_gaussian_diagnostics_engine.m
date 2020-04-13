@@ -10,14 +10,10 @@ gail.InitializeDisplay
 
 %whEx = 3;
 fNames = {'ExpCos','Keister','rand'};
-ptransforms = {'C1','C1sin', 'none'};
+ptransforms = {'none','C1sin', 'none'};
 fName = fNames{whEx};
 ptransform = ptransforms{whEx};
 
-% npts = 2^6;  % max 14
-% dim = 2;
-% rVec = 1.75;
-%rVec = [1.75 2.45 3.15]; %vector of possible r valuesr
 rOptAll(nReps,1) = 0;
 thOptAll(nReps,1) = 0;
 
@@ -26,19 +22,19 @@ thOptAll(nReps,1) = 0;
 if whEx == 3
    rfun = r/2;
    f_mean = fpar(3);
-   f_std_a = fpar(1);
-   f_std_b = fpar(2);
+   f_std_a = fpar(1); %this is square root of the a in the talk
+   f_std_b = fpar(2); %this is square root of the b in the talk
    theta = (f_std_a/f_std_b)^2;
 else
-   theta = NaN
+   theta = NaN;
 end
 
 for iii = 1:nReps
-  seed = randi([1,1e6],1,1) %different each rep
+  seed = randi([1,1e6],1,1); %different each rep
 
   shift = rand(1,dim);
   
-  [xpts,xlat] = simple_lattice_gen(npts,dim,shift,true);
+  [~,xlat,~,xpts] = simple_lattice_gen(npts,dim,shift,true);
   
   if strcmp(fName,'ExpCos')
     integrand = @(x) exp(sum(cos(2*pi*x), 2));
@@ -64,10 +60,10 @@ for iii = 1:nReps
   end
   
    objfun = @(lnParams) ...
-     ObjectiveFunction(exp(lnParams(1)),1+exp(lnParams(2)),xlat,(ftilde));
+     ObjectiveFunction(exp(lnParams(1)),1+exp(lnParams(2)),xlat,ftilde);
    %% Plot the objective function
-   lnthetarange = (-2:0.2:2);
-   lnorderrange = (-1:0.1:1);
+   lnthetarange = (-2:0.2:2); %range of log(theta) for plotting
+   lnorderrange = (-1:0.1:1); %range of log(r) for plotting
    [lnthth,lnordord] = meshgrid(lnthetarange,lnorderrange);
    objobj = lnthth;
    for ii =  1:size(lnthth,1)
@@ -91,12 +87,12 @@ for iii = 1:nReps
    thetaOptAppx = exp(lnthOptAppx)
    lnordOptAppx = lnordord(whichrow,whichcol);
    orderOptAppx = 1+exp(lnordOptAppx)
-   objMinAppx
+   objMinAppx % minimum objectiove function by brute force search
 
       
    %% Optimize the objective function
    [lnParamsOpt,objMin] = fminsearch(objfun,[lnthOptAppx;lnordOptAppx],optimset('TolX',1e-3));
-   objMin
+   objMin %minimum objectiove function by Nelder-Mead
    thetaOpt = exp(lnParamsOpt(1));
    rOpt = 1 + exp(lnParamsOpt(2));
    rOptAll(iii) = rOpt;
@@ -105,14 +101,19 @@ for iii = 1:nReps
    if iii <= nPlots
       hold on 
       scatter3(lnParamsOpt(1),lnParamsOpt(2),objfun(lnParamsOpt)*1.002,1000,MATLABYellow,'.')%     end
-      print('-depsc',[ fName '-ObjFun-n-' int2str(npts) '-d-' int2str(dim) ...
-         '-r-' int2str(r*100) '-th-' int2str(100*theta) '-case-' int2str(iii) '.eps']);
+      if isnan(theta)
+         print('-depsc',[ fName '-ObjFun-n-' int2str(npts) '-d-' int2str(dim) ...
+            '-case-' int2str(iii) '.eps']);
+      else
+         print('-depsc',[ fName '-ObjFun-n-' int2str(npts) '-d-' int2str(dim) ...
+            '-r-' int2str(r*100) '-th-' int2str(100*theta) '-case-' int2str(iii) '.eps']);
+      end
    end
   
   % lambda1 = kernel(r, xlat_, thetaOpt);
   vlambda = kernel2(thetaOpt, rOpt, xlat);
   s2 = sum(abs(ftilde(2:end).^2)./vlambda(2:end))/(npts^2);
-  vlambda = (s2)*vlambda;
+  vlambda = s2*vlambda;
 
   % apply transform
   % $\vZ = \frac 1n \mV \mLambda^{-\frac 12} \mV^H(\vf - m \vone)$
@@ -150,14 +151,27 @@ else
   ylabel('Data Quantiles')
 end
 
+if isnan(theta)
 title(['\(d = ' num2str(dim) ...
+   ',\ n = ' num2str(n) ...
+   ',\ r_{\textup{opt}} = ' num2str(rOpt,3) ...
+   ',\ \theta_{\textup{opt}} = ' num2str(thetaOpt,3) '\)'])
+else
+   title(['\(d = ' num2str(dim) ...
    ',\ n = ' num2str(n) ...
    ',\ r = ' num2str(r,3) ...
    ',\ r_{\textup{opt}} = ' num2str(rOpt,3) ...
    ',\ \theta = ' num2str(theta,3) ...
    ',\ \theta_{\textup{opt}} = ' num2str(thetaOpt,3) '\)'])
-print('-depsc',[fName '-QQPlot-n-' int2str(n) '-d-' int2str(dim) ...
+end
+
+if isnan(theta)
+   print('-depsc',[fName '-QQPlot-n-' int2str(n) '-d-' int2str(dim) ...
+         '-' int2str(iii) '.eps'])
+else
+   print('-depsc',[fName '-QQPlot-n-' int2str(n) '-d-' int2str(dim) ...
          '-r-' int2str(r*100) '-th-' int2str(100*theta) '-' int2str(iii) '.eps'])
+end
 end
 
 % gaussian random function
@@ -167,58 +181,59 @@ rng(seed) % initialize random number generator for reproducability
 N1 = 2^floor(16/dim);
 Nall = N1^dim;
 kvec(dim,Nall) = 0; %initialize kved
-kvec(1,1:N1) = 0:N1-1; %first dimension
+kvec(1,1:N1) = 0:(N1-1); %first dimension
 Nd = N1;
-for d = 2:dim
+for d = 2:dim %create the wave number array
    Ndm1 = Nd;
    Nd = Nd*N1;
    kvec(1:d,1:Nd) = [repmat(kvec(1:d-1,1:Ndm1),1,N1); ...
       reshape(repmat(0:N1-1,Ndm1,1),1,Nd)];
 end
+kvec = kvec(:,2:Nall); %remove the zero wavenumber
 whZero = sum(kvec==0,1);
-abfac = a.^(d - whZero(2:Nall)) .* b.^whZero(2:Nall);
-kbar = prod(max(kvec(:,2:Nall),1),1);
+abfac = a.^(d - whZero) .* b.^whZero;
+kbar = prod(max(kvec,1),1);
 totfac = abfac./(kbar.^rfun);
 f_c = randn(1,Nall-1).*totfac;
 f_s = randn(1,Nall-1).*totfac;
 f_0 = c + (b.^d)*randn(1, 1);
-argx = (2*pi*xpts) * kvec(:,2:Nall);
+argx = (2*pi*xpts) * kvec;
 f_c_ = f_c.*cos(argx);
 f_s_ = f_s.*sin(argx);
 fval = f_0 + sum(f_c_+ f_s_,2);
 end
 
-function Lambda = kernel(theta, r, xun)
-constMult =  -(-1)^(r/2)*((2*pi)^r)/(2*factorial(r));
-if r == 2
-  bernPoly = @(x)(-x.*(1-x) + 1/6);
-elseif r == 4
-  bernPoly = @(x)( ( (x.*(1-x)).^2 ) - 1/30);
-else
-  error('Bernoulli order=%d not implemented !', r);
-end
-kernelFunc = @(x) bernPoly(x);
-
-temp_ = bsxfun(@times, (theta)*constMult, kernelFunc(xun));
-C1 = prod(1 + temp_, 2);
-
-% matlab's builtin fft is much faster and accurate
-% eigenvalues must be real : Symmetric pos definite Kernel
-Lambda = real(fft(C1));
-
-end
+% function Lambda = kernel(theta, r, xun)
+% constMult =  -(-1)^(r/2)*((2*pi)^r)/(2*factorial(r));
+% if r == 2
+%   bernPoly = @(x)(-x.*(1-x) + 1/6);
+% elseif r == 4
+%   bernPoly = @(x)( ( (x.*(1-x)).^2 ) - 1/30);
+% else
+%   error('Bernoulli order=%d not implemented !', r);
+% end
+% kernelFunc = @(x) bernPoly(x);
+% 
+% temp_ = bsxfun(@times, (theta)*constMult, kernelFunc(xun));
+% C1 = prod(1 + temp_, 2);
+% 
+% % matlab's builtin fft is much faster and accurate
+% % eigenvalues must be real : Symmetric pos definite Kernel
+% Lambda = real(fft(C1));
+% 
+% end
 
 function vlambda = kernel2(theta, r, xun)
-n = size(xun, 1);
-m = (1:(-1 + n/2))';
-tilde_g_h1 = m.^(-r);
-tilde_g = [0; tilde_g_h1; 0; tilde_g_h1(end:-1:1)];
-g = fft(tilde_g);
-temp_ = (theta/2)*g(1 + xun*n);
-C1 = prod(1 + temp_, 2);
-% matlab's builtin fft is much faster and accurate
-% eigenvalues must be real : Symmetric pos definite Kernel
-vlambda = real(fft(C1));
+   n = size(xun, 1);
+   m = (1:(-1 + n/2))';
+   tilde_g_h1 = m.^(-r);
+   tilde_g = [0; tilde_g_h1; 0; tilde_g_h1(end:-1:1)];
+   g = fft(tilde_g);
+   temp_ = (theta/2)*g(1 + xun*n);
+   C1 = prod(1 + temp_, 2);
+   % matlab's builtin fft is much faster and accurate
+   % eigenvalues must be real : Symmetric pos definite Kernel
+   vlambda = real(fft(C1));
 end
 
 
@@ -228,7 +243,7 @@ n = length(ftilde);
 % [Lambda, Lambda_ring] = kernel(xun,obj.kernType,a,obj.order,...
 %   obj.avoidCancelError);
 arbMean = true;
-[Lambda] = kernel2(theta ,order, xun);
+Lambda = kernel2(theta ,order, xun);
 
 % compute RKHSnorm
 %temp = abs(ftilde(Lambda~=0).^2)./(Lambda(Lambda~=0)) ;

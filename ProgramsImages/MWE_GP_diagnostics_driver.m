@@ -1,5 +1,25 @@
 gail.InitializeWorkspaceDisplay
 
+%% Exponential Cosine example
+fwh = 1;
+dim = 3;
+npts = 2^6;
+nRep = 20;
+nPlot = 2;
+[~, rOptAll, thOptAll, fName] = ...
+   MWE_gaussian_diagnostics_engine(fwh,dim,npts, ...
+   [],[],nRep,nPlot);
+
+%% Plot Exponential Cosine example
+figure
+plot(rOptAll, thOptAll, ...
+   '.','MarkerSize',20,'color',MATLABBlue)
+%axis([4 6 0.1 10])
+%set(gca,'yscale','log')
+xlabel('Inferred \(r\)')
+ylabel('Inferred \(\theta\)')
+print('-depsc',[fName '-rthInfer-n-' int2str(npts) '-d-' ...
+   int2str(dim)])
 
 %% Tests with random function
 rArray = [1.5 2 4];
@@ -53,5 +73,17 @@ nPlot = 2;
 [~, rOptAll, thOptAll, fName] = ...
    MWE_gaussian_diagnostics_engine(fwh,dim,npts, ...
    [],[],nRep,nPlot);
+
+%% Plot Keister example
+figure
+plot(rOptAll, thOptAll, ...
+   '.','MarkerSize',20,'color',MATLABBlue)
+%axis([4 6 0.5 1.5])
+%set(gca,'yscale','log')
+xlabel('Inferred \(r\)')
+ylabel('Inferred \(\theta\)')
+print('-depsc',[fName '-rthInfer-n-' int2str(npts) '-d-' ...
+   int2str(dim)])
+
 
 
