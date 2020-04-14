@@ -13,6 +13,7 @@
 	xspace,
 	calc,
 	colortbl,
+	siunitx,
  	graphicx}
 \usepackage[usenames]{xcolor}
 \usepackage[giveninits=false,backend=biber,style=nature, maxcitenames =10, mincitenames=9]{biblatex}
@@ -338,9 +339,38 @@ K_\vtheta(\vx) & = \prod_{j=1}^d [1 + a' B_{2r'}(x_j)] = \prod_{j=1}^d [1 + a \k
 
 
 
-\begin{frame}{Numerical Examples}
+\section{Numerical Examples}
  
- 
+ \begin{frame}[label=GaussProb]
+ 	\frametitle{Gaussian Probability}
+ 	\vspace{-8ex}
+ 	\begin{tabular}{m{0.7\textwidth}m{3cm}}
+ 		\begin{equation*}
+ 		\mu = \int_{(\va,\vb)} \frac{\exp\bigl(- \frac 12 \vt^T \mSigma^{-1} \vt 
+ 			\bigr)}{\sqrt{(2 
+ 				\pi)^d \det(\mSigma)}} \, \dif \vt \
+ 		= \ \int_{[0,1]^{d-1}} 
+ 		f(\vx) \, 
+ 		\dif \vx
+ 		\end{equation*}
+ 		& 
+ 		%\includegraphics[height = 2.3cm]{Programs/GenzFun.eps}
+ 	\end{tabular}
+ 	 	
+ 	\vspace{-4ex}
+ 	
+\input{ProgramsImages/MVNBayesOut.txt}
+
+%	\begin{equation*}
+%\begin{array}{rccccc}
+%\toprule 
+%\input{ProgramsImages/MVNBayesOut.txt}
+%\end{array}
+%\end{equation*}
+
+ 	\vspace{-2ex}
+ 	
+ 	These algorithms are implemented in GAIL\footfullcite{ChoEtal17b}
  
  
  
