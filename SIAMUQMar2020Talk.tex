@@ -342,16 +342,16 @@ K_\vtheta(\vx) & = \prod_{j=1}^d [1 + a' B_{2r'}(x_j)] = \prod_{j=1}^d [1 + a \k
 \section{Numerical Examples}
  
  \begin{frame}[label=GaussProb]
- 	\frametitle{Gaussian Probability}
+ 	\frametitle{Gaussian Probability\footfullcite{Gen93}}
  	\vspace{-8ex}
  	\begin{tabular}{m{0.7\textwidth}m{3cm}}
  		\begin{equation*}
- 		\mu = \int_{(\va,\vb)} \frac{\exp\bigl(- \frac 12 \vt^T \mSigma^{-1} \vt 
+ 		\int_{(\va,\vb)} \frac{\exp\bigl(- \frac 12 \vt^T \mSigma^{-1} \vt 
  			\bigr)}{\sqrt{(2 
  				\pi)^d \det(\mSigma)}} \, \dif \vt \
  		= \ \int_{[0,1]^{d-1}} 
  		f(\vx) \, 
- 		\dif \vx
+ 		\dif \vx \qquad \talert{by Genz's transformation}
  		\end{equation*}
  		& 
  		%\includegraphics[height = 2.3cm]{Programs/GenzFun.eps}
@@ -360,13 +360,6 @@ K_\vtheta(\vx) & = \prod_{j=1}^d [1 + a' B_{2r'}(x_j)] = \prod_{j=1}^d [1 + a \k
  	\vspace{-4ex}
  	
 \input{ProgramsImages/MVNBayesOut.txt}
-
-%	\begin{equation*}
-%\begin{array}{rccccc}
-%\toprule 
-%\input{ProgramsImages/MVNBayesOut.txt}
-%\end{array}
-%\end{equation*}
 
  	\vspace{-2ex}
  	
@@ -394,7 +387,8 @@ Q-Q plots of $\vz$ vs.\ standard Gaussian
 
 \bigskip
 
-\uncover<2->{Random function
+\uncover<2->{%
+	\only<2-8>{Random function fitting kernel with given $r$, $\theta$
 \[
 \begin{aligned}
 f(\vx) & = \widehat{f}_0  \\
@@ -402,7 +396,9 @@ f(\vx) & = \widehat{f}_0  \\
 & \qquad  \widehat{f}_0, \  \widehat{f}_c(\vk), \ \widehat{f}_s(\vk) \IIDsim \cn\biggl(0,a^{\norm[0]{\vk}} b^{d-\norm[0]{\vk}}\prod_{k_j \ne 0} k_j^{-r}\biggr) \\
 & \qquad \theta = a/b
 \end{aligned}
-\]}
+\]}%
+\only<9->{Keister function}
+}
 &
 \includegraphics<2>[width = 0.44\textwidth]{ProgramsImages/rand-QQPlot-n-64-d-2-r-150-th-25-1.eps}
 \includegraphics<3>[width = 0.44\textwidth]{ProgramsImages/rand-QQPlot-n-64-d-2-r-150-th-25-2.eps}
@@ -411,6 +407,9 @@ f(\vx) & = \widehat{f}_0  \\
 \includegraphics<6>[width = 0.44\textwidth]{ProgramsImages/rand-QQPlot-n-64-d-2-r-400-th-400-1.eps}
 \includegraphics<7>[width = 0.44\textwidth]{ProgramsImages/rand-QQPlot-n-64-d-2-r-400-th-400-2.eps}
 \includegraphics<8>[width = 0.4\textwidth]{ProgramsImages/rand-rthInfer-n-64-d-2.eps}
+\includegraphics<9>[width = 0.44\textwidth]{ProgramsImages/Keister-QQPlot-n-64-d-3-1.eps}
+\includegraphics<10>[width = 0.44\textwidth]{ProgramsImages/Keister-QQPlot-n-64-d-3-2.eps}
+\includegraphics<11>[width = 0.44\textwidth]{ProgramsImages/Keister-rthInfer-n-64-d-3.eps}
 \end{tabular}
 
 \end{frame}

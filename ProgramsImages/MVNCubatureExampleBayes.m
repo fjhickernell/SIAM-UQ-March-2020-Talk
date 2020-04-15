@@ -28,7 +28,7 @@
 
 function MVNCubatureExampleBayes(nRep)
 d = 10;  % Dimension of the problem
-abstol = 1e-3; % User input, absolute error bound
+abstol = 2e-4; % User input, absolute error bound
 reltol = 0;  % User input, relative error bound
 mu = zeros(d,1); % Mean of the distribution
 if nargin < 1
