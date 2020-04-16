@@ -195,7 +195,7 @@ Adaptive software libraries \href{https://gailgithub.github.io/GAIL_Dev/}{\beame
     c_{0\vtheta} = \int_{[0,1]^{d} \times [0,1]^{d}} C_{\vtheta}(\vt,\vx) \, \dif \vt \dif \vx > 0, \quad 
 \vc_\vtheta = \int_{[0,1]^{d}} C_{\vtheta}(\mX,\vt) \, \dif \vt \in [0,1]^{n} , \quad
 \mC_\vtheta = C_{\vtheta}(\mX,\mX)  \in [0,1]^{n \times n} \\
-\int_{[0,1]^d} f(\vx) \, \dif \vx  \, \big \vert \, (\vf = \vy) \sim \cn\Bigl(\underbrace{ m[ 1 - \vc_\vtheta^T \mC_\vtheta^{-1}\vone] + \vc_\vtheta^T \mC^{-1}\vy}_{\alg(f,\varepsilon)}, s^2(c_\vtheta - \vc_\vtheta^T \mC_\vtheta^{-1}\vc_\vtheta)\Bigr)
+\int_{[0,1]^d} f(\vx) \, \dif \vx  \, \big \vert \, (\vf = \vy) \sim \cn\Bigl(\underbrace{ m[ 1 - \vc_\vtheta^T \mC_\vtheta^{-1}\vone] + \vc_\vtheta^T \mC^{-1}\vy}_{\alg(f,\varepsilon)}, s^2(c_{0\vtheta} - \vc_\vtheta^T \mC_\vtheta^{-1}\vc_\vtheta)\Bigr)
     \end{gather*}
     
     \vspace{-4ex}
@@ -266,7 +266,7 @@ Find a kernel $C_\vtheta$ to \alert{match} the design $\mX$ so that
 
 \vspace{-6ex}
 \begin{gather*}
-\mC_\vtheta = \frac 1n \mV \mLambda \mV^H , 
+\mC_\vtheta = \frac 1n \mV \mLambda_\vtheta \mV^H , 
 \quad \quad \mV^H = n \mV^{-1}, \qquad
 \mV = (\vv_1,\ldots,\vv_n)^T = (\vV_1,\ldots,\vV_n) \text{ known analytically} \\
 \vv_1 = \vV_1 = \vone, \qquad \vc_\vtheta = \vone, \qquad
@@ -277,7 +277,7 @@ $C_\vtheta$ is a \alert{fast Bayesian transform kernel} and $\vb \mapsto \mV^H \
 \vspace{-2ex}
 Then by empirical Bayes
 \begin{gather*}
-\widetilde{\vy} = \talert{\,FBT of function data } \vy , \qquad \vlambda_\vtheta = (\lambda_1 , \ldots, \lambda_n)^T=  \widetilde{\vC}_{\vtheta,1} = \talert{\,FBT of first column of } \mC_\vtheta \\
+\widetilde{\vy} = \talert{\,FBT of function data } \vy , \quad \vlambda_\vtheta = \diag(\mLambda_\vtheta) = (\lambda_{\vtheta,1} , \ldots, \lambda_{\vtheta,n})^T=  \widetilde{\vC}_{\vtheta,1} = \talert{\,FBT of first column of } \mC_\vtheta \\
 	\vtheta_{\MLE} = 
 \argmin_{\vtheta}
 \left[
@@ -330,7 +330,7 @@ K_\vtheta(\vx) & = \prod_{j=1}^d [1 + a' B_{2r'}(x_j)] = \prod_{j=1}^d [1 + a \k
 
 \uncover<2->{\alert{But} all we need to compute the integral and credible interval is $\widetilde{\vy}$ and 
 	\[
-	\lambda_\vtheta =  \widetilde{\vC}_{\vtheta,1}, \qquad \text{where } \vC_{\vtheta,1} = \Bigl(  K_{\vtheta}(\vx_i \ominus \vx_1)\Bigr)_{i=1}^n,  \text{ which only depends on } \kappa_r(\ell/n) \text{ for } \ell = 0, \ldots, n-1
+	\vlambda_\vtheta =  \widetilde{\vC}_{\vtheta,1}, \qquad \text{where } \vC_{\vtheta,1} = \Bigl(  K_{\vtheta}(\vx_i \ominus \vx_1)\Bigr)_{i=1}^n,  \text{ which only depends on } \kappa_r(\ell/n) \text{ for } \ell = 0, \ldots, n-1
 	\]
 \uncover<3->{Moreover, $\bigl( \kappa_r(\ell/n) \bigr)_{\ell = 0}^{n-1}$ can be computed using \alert{one FFT} \hyperlink{kappaDeriv}{\beamergotobutton{details}}
 }}
@@ -340,6 +340,31 @@ K_\vtheta(\vx) & = \prod_{j=1}^d [1 + a' B_{2r'}(x_j)] = \prod_{j=1}^d [1 + a \k
 
 
 \section{Numerical Examples}
+
+ \begin{frame}[label=GaussProb]
+	\frametitle{Keister's Example\footfullcite{Kei96}}
+	\vspace{-8ex}
+	\begin{tabular}{m{0.7\textwidth}m{3cm}}
+		\begin{equation*}
+		\int_{\reals^d} \cos(\norm{\vt})\exp(-\norm{\vt}^2)
+		= \ \int_{[0,1]^{d-1}} 
+		f(\vx) \, 
+		\dif \vx 
+		\end{equation*}
+		& 
+		%\includegraphics[height = 2.3cm]{Programs/GenzFun.eps}
+	\end{tabular}
+	
+	\vspace{-4ex}
+	
+	\input{ProgramsImages/MVNBayesOut.txt}
+	
+	\vspace{-2ex}
+	
+	Algorithms are implemented in GAIL\footfullcite{ChoEtal17b} and soon QMCPy\footfullcite{QMCPy2020a}
+	
+\end{frame}
+
  
  \begin{frame}[label=GaussProb]
  	\frametitle{Gaussian Probability\footfullcite{Gen93}}
@@ -363,7 +388,7 @@ K_\vtheta(\vx) & = \prod_{j=1}^d [1 + a' B_{2r'}(x_j)] = \prod_{j=1}^d [1 + a \k
 
  	\vspace{-2ex}
  	
- 	These algorithms are implemented in GAIL\footfullcite{ChoEtal17b} and soon QMCPy\footfullcite{QMCPy2020a}
+ Algorithms are implemented in GAIL\footfullcite{ChoEtal17b} and soon QMCPy\footfullcite{QMCPy2020a}
  
  
  
@@ -375,10 +400,14 @@ K_\vtheta(\vx) & = \prod_{j=1}^d [1 + a' B_{2r'}(x_j)] = \prod_{j=1}^d [1 + a \k
 \begin{frame}{Is $f$ a Typical Instance of a Gaussian Process?}
 	
 	\vspace{-2ex}
-If $f \in \GP(m,s^2C_\vtheta)$, then $\vZ := s^{-1} n^{-1}\mV \mLambda_\vtheta^{-1/2} \mV^H ( \vf - m\vone) \sim \cn(\vzero,\mI)$.  Generate the data 
+If $f \in \GP(m,s^2C_\vtheta)$, then 
+$\vZ := s^{-1} \underbrace{n^{-1}\mV \mLambda_\vtheta^{-1/2} \mV^H}_{\mC_{\vtheta}^{-1/2}} ( \vf - m\vone) \sim \cn(\vzero,\mI)$.  
+Generate the data 
+
+\vspace{-4ex}
 \[
 \vz = \frac{1}{n s_{\MLE} } \mV \mLambda_{\vtheta_{\MLE}}^{-1/2} \mV^H ( \vy - m_{\MLE}\vone) = 
-\left[\sum_{i=2}^n \frac{\abs{\widetilde{y}_i}^2}{\lambda_i} \right]^{-1} \mV \mLambda_{\vtheta_{\MLE}}^{-1/2} ( \widetilde{\vy} - \widetilde{y}_1 \ve_1)
+\left[\sum_{i=2}^n \frac{\abs{\widetilde{y}_i}^2}{\lambda_{\vtheta_{\MLE},i}} \right]^{-1} \mV \mLambda_{\vtheta_{\MLE}}^{-1/2} ( \widetilde{\vy} - \widetilde{y}_1 \ve_1)
 \]
 
 \vspace{-2ex}
@@ -388,7 +417,7 @@ Q-Q plots of $\vz$ vs.\ standard Gaussian
 \bigskip
 
 \uncover<2->{%
-	\only<2-8>{Random function fitting kernel with given $r$, $\theta$
+	\only<1-8>{Random function fitting kernel with given $r$, $\theta$
 \[
 \begin{aligned}
 f(\vx) & = \widehat{f}_0  \\
@@ -397,7 +426,12 @@ f(\vx) & = \widehat{f}_0  \\
 & \qquad \theta = a/b
 \end{aligned}
 \]}%
-\only<9->{Keister function}
+\only<9->{$f$ from Keister's example
+
+\bigskip
+
+True $r$ and $\theta$ unknown
+}
 }
 &
 \includegraphics<2>[width = 0.44\textwidth]{ProgramsImages/rand-QQPlot-n-64-d-2-r-150-th-25-1.eps}
@@ -410,6 +444,9 @@ f(\vx) & = \widehat{f}_0  \\
 \includegraphics<9>[width = 0.44\textwidth]{ProgramsImages/Keister-QQPlot-n-64-d-3-1.eps}
 \includegraphics<10>[width = 0.44\textwidth]{ProgramsImages/Keister-QQPlot-n-64-d-3-2.eps}
 \includegraphics<11>[width = 0.44\textwidth]{ProgramsImages/Keister-rthInfer-n-64-d-3.eps}
+\includegraphics<12>[width = 0.44\textwidth]{ProgramsImages/Keister-QQPlot-n-1024-d-3-1.eps}
+\includegraphics<13>[width = 0.44\textwidth]{ProgramsImages/Keister-QQPlot-n-1024-d-3-2.eps}
+\includegraphics<14>[width = 0.44\textwidth]{ProgramsImages/Keister-rthInfer-n-1024-d-3.eps}
 \end{tabular}
 
 \end{frame}
@@ -419,39 +456,55 @@ f(\vx) & = \widehat{f}_0  \\
 \vspace{-6ex}
 
 \begin{frame}
-	{What Are the Right Ingredients for Adaptive Function Approximation?}
+	{The Successes of Bayesian Cubature}
+\northeaststuff{1}{2.4}{\includegraphics[width=2cm]{ProgramsImages/GoldVase.jpg}}
+\northeaststuff{1}{0.9}{\alert{$f$}}
+
+\vspace{-8ex}
 	
+\begin{minipage}{0.9\textwidth}
+
 	\begin{itemize}
-		\item A fixed budget \alert{homogeneous approximation}, $\app : \cx^n \times \reals^n \to L^{\infty}(\cx)$, with an error bound, e.g., linear splines, RKHS approximation
+		\item \alert{Credible intervals} lead to adaptive cubature algorithms that provide answers to the desired tolerances
 		
-		\item An unbounded, non-convex \alert{candidate set}, $\cc$, for which the error bound can be bounded in \alert{data-driven} way; what you see is almost what you get
+		\item \alert{Low discrepancy sampling} provides cubatures requiring fewer samples that IID sampling
 		
-		\item \alert{Necessary} conditions for $f$ to lie in $\cc$; will not have sufficient conditions
+		\item \alert{Empirical Bayes} and other methods can infer reasonable Gaussian process parameters for a family of covairance kernels---choosing a reasonable urn for $f$
 		
-		\item A rich enough candidate set from which the right approximation can be \alert{inferred}; attention to underfitting and overfitting
+		\item Covariance kernels that \alert{match} the low discrepancy sampling facilitate \alert{fast Bayeian transforms} for fitting the Gaussian process parameters,  computing the cubature, and constructing the credible intervals
+		
+		\item Extra effort provides a \alert{richer} family of covariance kernels
 		
 			
 	\end{itemize}
 
+\end{minipage}
 
-	\uncover<2->{
-	\begin{itemize}
-	\item More work is needed on 
+\end{frame}
+
+
+\begin{frame}
+	{The Challenges of Bayesian Cubature}
+	\northeaststuff{1}{2.4}{\includegraphics[width=2cm]{ProgramsImages/GoldVase.jpg}}
+	\northeaststuff{1}{0.9}{\alert{$f$}}
 	
-	\begin{itemize}
+	\vspace{-8ex}
+	
+	\begin{minipage}{0.9\textwidth}
 		
-		\item What makes a good initial sample
-	
-		\item Balancing the richness of the candidate set with overfitting
+		\begin{itemize}
+			\item Inferring the Gaussian process parameters and allowing a larger family of kernels takes \alert{extra computational time}
+			
+			\item \alert{Overfitting} as well as underfitting the kernel are possible
+			
+			\item The \alert{Gaussian} assumption is not always justified by the data
+			
+			\item Which \alert{periodizing} transformations of $f$ are appropriate for lattice sampling and its matching kernels?
+			
+		\end{itemize}
 		
-		\item Numerical instability and computational effort challenges for larger numbers of data sites. 
+	\end{minipage}
 	
-	
-\end{itemize}
-\end{itemize}
-}
-
-
 \end{frame}
 
 

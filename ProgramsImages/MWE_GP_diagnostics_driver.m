@@ -16,6 +16,7 @@ plot(rOptAll, thOptAll, ...
    '.','MarkerSize',20,'color',MATLABBlue)
 %axis([4 6 0.1 10])
 %set(gca,'yscale','log')
+title(['\(d = ' num2str(dim) ',\ n = ' num2str(npts) '\)'])
 xlabel('Inferred \(r\)')
 ylabel('Inferred \(\theta\)')
 print('-depsc',[fName '-rthInfer-n-' int2str(npts) '-d-' ...
@@ -59,6 +60,7 @@ for jjj = 1:nrArr
 end
 axis([1 6 0.01 100])
 set(gca,'yscale','log')
+title(['\(d = ' num2str(dim) ',\ n = ' num2str(npts) '\)'])
 xlabel('Inferred \(r\)')
 ylabel('Inferred \(\theta\)')
 print('-depsc',[fName '-rthInfer-n-' int2str(npts) '-d-' ...
@@ -82,8 +84,33 @@ plot(rOptAll, thOptAll, ...
 %set(gca,'yscale','log')
 xlabel('Inferred \(r\)')
 ylabel('Inferred \(\theta\)')
+title(['\(d = ' num2str(dim) ',\ n = ' num2str(npts) '\)'])
 print('-depsc',[fName '-rthInfer-n-' int2str(npts) '-d-' ...
    int2str(dim)])
+
+
+%% Keister example
+fwh = 2;
+dim = 3;
+npts = 2^10;
+nRep = 20;
+nPlot = 2;
+[~, rOptAll, thOptAll, fName] = ...
+   MWE_gaussian_diagnostics_engine(fwh,dim,npts, ...
+   [],[],nRep,nPlot);
+
+%% Plot Keister example
+figure
+plot(rOptAll, thOptAll, ...
+   '.','MarkerSize',20,'color',MATLABBlue)
+%axis([4 6 0.5 1.5])
+%set(gca,'yscale','log')
+xlabel('Inferred \(r\)')
+ylabel('Inferred \(\theta\)')
+title(['\(d = ' num2str(dim) ',\ n = ' num2str(npts) '\)'])
+print('-depsc',[fName '-rthInfer-n-' int2str(npts) '-d-' ...
+   int2str(dim)])
+
 
 
 
