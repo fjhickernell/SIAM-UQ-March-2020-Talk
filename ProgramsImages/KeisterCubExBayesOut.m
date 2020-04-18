@@ -4,9 +4,7 @@ function KeisterCubExBayesOut(dataFileName)
 
 gail.InitializeDisplay
 
-GAILPATH = GAILstart(0);
-dirpath = strcat([GAILPATH,'OutputFiles',filesep], 'Paper_cubBayesLattice_g');
-
+dirpath = '.';
 load(dataFileName);
 
 %% Output
