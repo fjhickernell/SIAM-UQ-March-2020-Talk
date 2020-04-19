@@ -343,7 +343,7 @@ K_\vtheta(\vx) & = \prod_{j=1}^d [1 + a' B_{2r'}(x_j)] = \prod_{j=1}^d [1 + a \k
 
  \begin{frame}[label=GaussProb]
 	\frametitle{Keister's Example\footfullcite{Kei96}}
-	\vspace{-8ex}
+	\vspace{-6ex}
 	\begin{tabular}{m{0.7\textwidth}m{3cm}}
 		\begin{equation*}
 		\int_{\reals^d} \cos(\norm{\vt})\exp(-\norm{\vt}^2)
@@ -357,9 +357,9 @@ K_\vtheta(\vx) & = \prod_{j=1}^d [1 + a' B_{2r'}(x_j)] = \prod_{j=1}^d [1 + a \k
 	
 	\vspace{-4ex}
 	
-	\input{ProgramsImages/MVNBayesOut.txt}
+	\input{ProgramsImages/KeisterBayesOut.txt}
 	
-	\vspace{-2ex}
+	\vspace{-4ex}
 	
 	Algorithms are implemented in GAIL\footfullcite{ChoEtal17b} and soon QMCPy\footfullcite{QMCPy2020a}
 	
@@ -417,7 +417,7 @@ Q-Q plots of $\vz$ vs.\ standard Gaussian
 \bigskip
 
 \uncover<2->{%
-	\only<1-8>{Random function fitting kernel with given $r$, $\theta$
+	\only<1-8>{\alert{Random function} fitting kernel with given $r$, $\theta$
 \[
 \begin{aligned}
 f(\vx) & = \widehat{f}_0  \\
@@ -426,7 +426,7 @@ f(\vx) & = \widehat{f}_0  \\
 & \qquad \theta = a/b
 \end{aligned}
 \]}%
-\only<9->{$f$ from Keister's example
+\only<9->{$f$ from \alert{Keister's example}
 
 \bigskip
 
@@ -441,12 +441,12 @@ True $r$ and $\theta$ unknown
 \includegraphics<6>[width = 0.44\textwidth]{ProgramsImages/rand-QQPlot-n-64-d-2-r-400-th-400-1.eps}
 \includegraphics<7>[width = 0.44\textwidth]{ProgramsImages/rand-QQPlot-n-64-d-2-r-400-th-400-2.eps}
 \includegraphics<8>[width = 0.4\textwidth]{ProgramsImages/rand-rthInfer-n-64-d-2.eps}
-\includegraphics<9>[width = 0.44\textwidth]{ProgramsImages/Keister-QQPlot-n-64-d-3-1.eps}
-\includegraphics<10>[width = 0.44\textwidth]{ProgramsImages/Keister-QQPlot-n-64-d-3-2.eps}
-\includegraphics<11>[width = 0.44\textwidth]{ProgramsImages/Keister-rthInfer-n-64-d-3.eps}
-\includegraphics<12>[width = 0.44\textwidth]{ProgramsImages/Keister-QQPlot-n-1024-d-3-1.eps}
-\includegraphics<13>[width = 0.44\textwidth]{ProgramsImages/Keister-QQPlot-n-1024-d-3-2.eps}
-\includegraphics<14>[width = 0.44\textwidth]{ProgramsImages/Keister-rthInfer-n-1024-d-3.eps}
+\includegraphics<9>[width = 0.4\textwidth]{ProgramsImages/Keister-QQPlot-n-64-d-3-1.eps}
+\includegraphics<10>[width = 0.4\textwidth]{ProgramsImages/Keister-QQPlot-n-64-d-3-2.eps}
+\includegraphics<11>[width = 0.4\textwidth]{ProgramsImages/Keister-rthInfer-n-64-d-3.eps}
+\includegraphics<12>[width = 0.4\textwidth]{ProgramsImages/Keister-QQPlot-n-1024-d-3-1.eps}
+\includegraphics<13>[width = 0.4\textwidth]{ProgramsImages/Keister-QQPlot-n-1024-d-3-2.eps}
+\includegraphics<14>[width = 0.4\textwidth]{ProgramsImages/Keister-rthInfer-n-1024-d-3.eps}
 \end{tabular}
 
 \end{frame}

@@ -1,4 +1,3 @@
-
 function MVNCubExBayesOut(dataFileName)
 
 % MVNCubExBayesOut: Prints LaTeX table of outputs from
@@ -6,8 +5,6 @@ function MVNCubExBayesOut(dataFileName)
 
 gail.InitializeDisplay
 
-% GAILPATH = GAILstart(0);
-% dirpath = strcat([GAILPATH,'OutputFiles',filesep], 'Paper_cubBayesLattice_g');
 dirpath = '.';
 load(dataFileName);
 %% Output
