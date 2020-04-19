@@ -16,7 +16,7 @@ for i = istart:length(avgAbsErrMC)
    if i == 1
       fprintf(fid,'\\multicolumn{6}{c}{\\varepsilon = \\num{%2.0e}, \\ d = %1.0f,\\ \\mSigma = \\mI, \\ \\vb=-\\va=(3.5,\\dots,3.5) } \\\\ \\midrule \n', abstol, d);
    else
-	   fprintf(fid,'\\multicolumn{6}{c}{\\varepsilon = \\num{%2.0e}, \\ d = %1.0f,\\ \\mSigma = 0.4 \\mI, + 0.6\\vone\\vone^T , \\ \\va=(-\\infty,\\dots,-\\infty), \\ \\vb\\sim \\sqrt{d}\\cu[0,1]^d } \\\\ \\midrule \n',abstol,d);
+	   fprintf(fid,'\\multicolumn{6}{c}{\\varepsilon = \\num{%2.0e}, \\ d = %1.0f,\\ \\mSigma = 0.4 \\mI + 0.6\\vone\\vone^T , \\ \\va=(-\\infty,\\dots,-\\infty), \\ \\vb\\sim \\sqrt{d}\\cu[0,1]^d } \\\\ \\midrule \n',abstol,d);
    end
   fprintf(fid,' \\text{Method} & \\text{MC} & \\text{Lattice} & \\text{Sobol''} & \\text{BayesLat} & \\text{BayesSobol}  \\\\\n');
   fprintf(fid,' \\text{Absolute Error} & \\num{%3.2e} & \\num{%3.2e} & \\num{%3.2e}  & \\num{%3.2e}  & \\num{%3.2e}  \\\\\n', ...

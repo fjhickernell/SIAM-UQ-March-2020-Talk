@@ -4,10 +4,10 @@
 \multicolumn{6}{c}{\varepsilon = \num{5e-03}, \ d = 3} \\ 
  \hline 
  \text{Method} & \text{MC} & \text{Lattice} & \text{Sobol} & \text{BayesLat} & \text{BayesSobol}  \\ 
- \text{Absolute Error} & \num{1.200000e-03} & \num{7.30e-04} & \num{3.30e-04}  & \num{4.00e-04}  & \num{3.30e-04}  \\ 
+ \text{Absolute Error} & \num{1.00e-03} & \num{5.20e-04} & \num{3.80e-04}  & \num{5.00e-04}  & \num{5.10e-04}  \\ 
  \text{Tolerance Met} & \num{  100} \% & \num{  100} \% & \num{  100} \% & \num{  100} \% & \num{  100} \%  \\
- n & \num{ 2500000} & \num{    4100} & \num{    4100} & \num{     510} & \num{    1900} \\
- \text{Time (seconds)} & \num{ 0.1200} & \num{ 0.0079} & \num{ 0.0078} & \num{ 0.0027} & \num{ 0.0450} \\ 
+ n & \num{ 2600000} & \num{    4100} & \num{    3700} & \num{    1000} & \num{    1800} \\
+ \text{Time (seconds)} & \num{ 0.1800} & \num{ 0.0230} & \num{ 0.0190} & \num{ 0.0260} & \num{ 0.0770} \\ 
  \\ 
 \end{array} 
  \]
