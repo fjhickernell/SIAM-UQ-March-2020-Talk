@@ -346,7 +346,7 @@ K_\vtheta(\vx) & = \prod_{j=1}^d [1 + a' B_{2r'}(x_j)] = \prod_{j=1}^d [1 + a \k
 	\vspace{-6ex}
 	\begin{tabular}{m{0.7\textwidth}m{3cm}}
 		\begin{equation*}
-		\int_{\reals^d} \cos(\norm{\vt})\exp(-\norm{\vt}^2)
+		\int_{\reals^d} \cos(\norm{\vt})\exp(-\norm{\vt}^2) \, \dif \vt
 		= \ \int_{[0,1]^{d-1}} 
 		f(\vx) \, 
 		\dif \vx 
@@ -423,7 +423,7 @@ Generate the data
 f(\vx) & = \widehat{f}_0  \\
 & + \sum_{\vk \in \{1, \ldots, N\}^d} \Bigl[\widehat{f}_c(\vk) \cos(2\pi \vk^T \vx) + \widehat{f}_s(\vk)\sin(2\pi \vk^T \vx)\Bigr] \\
 & \qquad  \widehat{f}_0, \  \widehat{f}_c(\vk), \ \widehat{f}_s(\vk) \IIDsim \cn\biggl(0,a^{\norm[0]{\vk}} b^{d-\norm[0]{\vk}}\prod_{k_j \ne 0} k_j^{-r}\biggr) \\
-& \qquad \theta = a/b
+& \qquad \theta = a/b,  \qquad N = 256
 \end{aligned}
 \]}%
 \only<9->{$f$ from \alert{Keister's example}
