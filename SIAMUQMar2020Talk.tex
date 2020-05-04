@@ -199,7 +199,7 @@ Adaptive software libraries \href{https://gailgithub.github.io/GAIL_Dev/}{\beame
     \end{gather*}
     
     \vspace{-4ex}
-Choosing $n$  large enough to make $2.58s\sqrt{c - \vc^T \mC^{-1}\vc} \le \varepsilon$ would seem to achieve our goal
+Choosing $n$  large enough to make $2.58s\sqrt{c_{0\vtheta} - \vc_\vtheta^T \mC_\vtheta^{-1}\vc_\vtheta} \le \varepsilon$ would seem to achieve our goal
 
  
  \vspace{-1ex}
@@ -291,7 +291,7 @@ Then by empirical Bayes
 \frac{2.58}{n}\sqrt{
 	\sum_{i=2}^{n} \frac{\abs{\widetilde{y}_i}^2}{\lambda_{\vtheta,i}}  
 	\,
-	\left( 1 -  \frac{n}{\lambda_{\vtheta,i}} \right) 
+	\left( 1 -  \frac{n}{\lambda_{\vtheta,1}} \right) 
 } \le \varepsilon
 \end{gather*}
 Cost is \alert{$O(n \log (n))$} times the number of iterations for optimizing $\vtheta$
@@ -308,8 +308,8 @@ Cost is \alert{$O(n \log (n))$} times the number of iterations for optimizing $\
 	\uncover<2->{Scrambled Sobol' Nodes, $\oplus = $ bitwise addition}  \tabularnewline
 		\uncover<2->{\includegraphics[height = 4cm]{ProgramsImages/ShiftedLatticePoints.eps}} &
 		\uncover<2->{\includegraphics[height = 4cm]{ProgramsImages/SSobolPoints.eps}} \tabularnewline
-		\uncover<3->{FBT  $ = $ \alert{Fast Fourier Transform}} &
-			\uncover<3->{FBT $ = $ \alert{Fast Walsh Transform}}
+		\uncover<2->{FBT  $ = $ \alert{Fast Fourier Transform}} &
+			\uncover<2->{FBT $ = $ \alert{Fast Walsh Transform}}
 	\end{tabular}
 \end{frame}
 
@@ -325,7 +325,7 @@ $\oplus = $ addition $\bmod \vone$.  Common example is
 K_\vtheta(\vx) & = \prod_{j=1}^d [1 + a' B_{2r'}(x_j)] = \prod_{j=1}^d [1 + a \kappa_r(x_j)], \qquad
 \vtheta = (a,r) \in (0,\infty) \times (1,\infty), \quad r = 2r'\\
 \kappa_r(x) &   : = \sum_{\abs{k} \ge 1}\frac{\exp(2\pi\sqrt{-1} kx)}{\abs{k}^{r}} \qquad
-   \text{$B_{2r'}$ closed form, \alert{but $r' \in \naturals$},\quad $\kappa_r$ defined for  $r>1$, \alert{but infinite sum}}
+   \text{$B_{2r'}$ closed form, \alert{but $r' \in \naturals$};\quad $\kappa_r$ defined for  $r>1$, \alert{but infinite sum}}
 \end{align*}
 
 \uncover<2->{\alert{But} all we need to compute the integral and credible interval is $\widetilde{\vy}$ and 
@@ -347,7 +347,7 @@ K_\vtheta(\vx) & = \prod_{j=1}^d [1 + a' B_{2r'}(x_j)] = \prod_{j=1}^d [1 + a \k
 	\begin{tabular}{m{0.7\textwidth}m{3cm}}
 		\begin{equation*}
 		\int_{\reals^d} \cos(\norm{\vt})\exp(-\norm{\vt}^2) \, \dif \vt
-		= \ \int_{[0,1]^{d-1}} 
+		= \ \int_{[0,1]^{d}} 
 		f(\vx) \, 
 		\dif \vx 
 		\end{equation*}
@@ -509,7 +509,7 @@ True $r$ and $\theta$ unknown
 
 
 
-\finalthanksnote{These slides are  available at \\  \href{https://speakerdeck.com/fjhickernell/right-ingredients-for-adaptive-function-approximation}{\nolinkurl{speakerdeck.com/fjhickernell/???}}}
+\finalthanksnote{These slides are  available at \\  \href{https://speakerdeck.com/fjhickernell/siam-uq-2020-bayesian-cubature}{\nolinkurl{speakerdeck.com/fjhickernell/siam-uq-2020-bayesian-cubature}}}
 
 
 \thankyouframe
